@@ -1,10 +1,10 @@
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Auth() {
     return (
-        <ScrollView style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <LinearGradient
                 colors={['#7C2900', '#d44600']}
                 style={styles.background}>
@@ -20,13 +20,13 @@ export default function Auth() {
                         style={styles.input}
                     />
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Entrar</Text>
+                        <Link href='/home' style={styles.buttonText}>Entrar</Link>
                     </TouchableOpacity>
 
                     <Link href='/auth/cadastro' style={styles.link}>Ainda não tem conta? Cadastre-se</Link>
                 </View>
             </LinearGradient>
-        </ScrollView>
+        </SafeAreaView>
     );
 }
 

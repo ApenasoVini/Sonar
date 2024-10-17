@@ -1,10 +1,10 @@
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Cadastro() {
     return (
-        <ScrollView style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <LinearGradient
                 colors={['#7C2900', '#d44600']}
                 style={styles.background}>
@@ -43,20 +43,19 @@ export default function Cadastro() {
                         style={styles.input}
                     />
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Cadastrar</Text>
+                        <Link href='/home' style={styles.buttonText}>Cadastrar</Link>
                     </TouchableOpacity>
 
                     <Link href='/auth' style={styles.link}>Já possui conta? Fazer login</Link>
                 </View>
             </LinearGradient>
-        </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        height: '100%'
     },
     background: {
         flex: 1,
