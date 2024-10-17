@@ -21,10 +21,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#001f35',
+        backgroundColor: '#7C2900',
     },
     img: {
-        width: 96,
-        height: 96,
+        width: 80,
+        height: 80,
     },
 });

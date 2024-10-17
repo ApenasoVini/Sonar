@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 
 import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function Auth() {
+export default function Cadastro() {
     return (
         <ScrollView style={styles.container}>
             <LinearGradient
@@ -10,8 +10,26 @@ export default function Auth() {
                 style={styles.background}>
                 <View style={styles.form}>
                     <TextInput
+                        placeholder='Nome'
+                        style={styles.input}
+                    />
+                    <TextInput
+                        placeholder='Sobrenome'
+                        style={styles.input}
+                    />
+                    <TextInput
+                        keyboardType='numeric'
+                        placeholder='Data de nascimento (dd/mm/yyyy)'
+                        style={styles.input}
+                    />
+                    <TextInput
                         keyboardType='email-address'
                         placeholder='Email'
+                        style={styles.input}
+                    />
+                    <TextInput
+                        keyboardType='numeric'
+                        placeholder='CPF (apenas números)'
                         style={styles.input}
                     />
                     <TextInput
@@ -19,11 +37,16 @@ export default function Auth() {
                         secureTextEntry={true}
                         style={styles.input}
                     />
+                    <TextInput
+                        placeholder='Repita a senha'
+                        secureTextEntry={true}
+                        style={styles.input}
+                    />
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Entrar</Text>
+                        <Text style={styles.buttonText}>Cadastrar</Text>
                     </TouchableOpacity>
 
-                    <Link href='/auth/cadastro' style={styles.link}>Ainda não tem conta? Cadastre-se</Link>
+                    <Link href='/auth' style={styles.link}>Já possui conta? Fazer login</Link>
                 </View>
             </LinearGradient>
         </ScrollView>
@@ -33,6 +56,7 @@ export default function Auth() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        height: '100%'
     },
     background: {
         flex: 1,
