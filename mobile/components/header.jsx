@@ -1,21 +1,25 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-export default function Header() {
+const Header = ({ title }) => {
+  return (
     <View style={styles.header}>
-        <Image style={styles.img} source={require('../assets/logo.png')} />
-        <Text style={styles.title}>Sonar</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
-}
+  );
+};
 
 const styles = StyleSheet.create({
-    header: {
-        flex: 1
-    },
-    img: {
-        width: 80,
-        height: 80,
-    },
-    title: {
-        fontWeight: '600'
-    }
-})
+  header: {
+    backgroundColor: '#FF6A00',
+    padding: 20,
+    alignItems: 'center',
+  },
+  title: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});
+
+export default Header;
