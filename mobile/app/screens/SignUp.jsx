@@ -1,18 +1,20 @@
 import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 
-const SignUp = ({ navigation }) => {
+const SignUp = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create an Account</Text>
-      <TextInput placeholder="First Name" style={styles.input} placeholderTextColor="#ccc" />
-      <TextInput placeholder="Last Name" style={styles.input} placeholderTextColor="#ccc" />
-      <TextInput placeholder="Email" style={styles.input} placeholderTextColor="#ccc" />
-      <TextInput placeholder="Password" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
-      <Button title="Sign Up" onPress={() => navigation.replace('Home')} color="#FF6A00" />
+      <Text style={styles.title}>Crie sua conta</Text>
+      <TextInput placeholder="Nome" style={styles.input} inputMode='text' placeholderTextColor="#ccc" />
+      <TextInput placeholder="Sobrenome" style={styles.input} inputMode='text' placeholderTextColor="#ccc" />
+      <TextInput placeholder="Email" style={styles.input} inputMode='email' placeholderTextColor="#ccc" />
+      <TextInput placeholder="Data de Nascimento" style={styles.input} placeholderTextColor="#ccc" />
+      <TextInput placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
+      <Button title="Cadastrar" onPress={() => router.push("/screens/Home")} color="#FF6A00" />
       <View style={styles.signin}>
-        <Text style={styles.signinText}>Already have an account? </Text>
-        <Text style={styles.signinLink} onPress={() => navigation.navigate('SignIn')}>Sign In</Text>
+        <Text style={styles.signinText}>Já tem uma conta? </Text>
+        <Text style={styles.signinLink} onPress={() => router.push("/screens/SignIn")}>Login</Text>
       </View>
     </View>
   );

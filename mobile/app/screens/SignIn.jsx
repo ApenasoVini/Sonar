@@ -1,18 +1,19 @@
 import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 
-const SignIn = ({ navigation }) => {
+const SignIn = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
-      <TextInput placeholder="Email" style={styles.input} placeholderTextColor="#ccc" />
-      <TextInput placeholder="Password" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
-      <Button title="Sign In" onPress={() => navigation.replace('Home')} color="#FF6A00" />
+      <Text style={styles.title}>Bem vindo de volta!</Text>
+      <TextInput placeholder="Email" style={styles.input} inputMode='email' placeholderTextColor="#ccc" />
+      <TextInput placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
+      <Button title="Entrar" onPress={() => router.push("/screens/Home")} color="#FF6A00" />
       <View style={styles.signup}>
-        <Text style={styles.signupText}>Don't have an account? </Text>
-        <Text style={styles.signupLink} onPress={() => navigation.navigate('SignUp')}>Sign Up</Text>
-      </View>
+        <Text style={styles.signupText}>Não tem uma conta? </Text>
+        <Text style={styles.signupLink} onPress={() => router.push("/screens/SignUp")}>Cadastar</Text>
     </View>
+    </View >
   );
 };
 

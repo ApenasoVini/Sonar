@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 export default function App() {
     useEffect(() => {
         setTimeout(() => {
-            router.push("/screens/Homee");
+            router.push("/screens/SignIn");
         }, 2000);
     });
 
