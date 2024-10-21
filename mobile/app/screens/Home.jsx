@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import Card from '../../components/card';
 import Header from '../../components/header';
 
-const Home = ({ navigation }) => {
+const Home = () => {
   const playlists = [
     { id: '1', title: 'Funk de cria' },
     { id: '2', title: 'Música clássica' },
@@ -14,16 +14,18 @@ const Home = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header title="Home" />
-      <View style={styles.list}>
-        <FlatList
-          data={playlists}
-          renderItem={({ item }) => (
-            <Card title={item.title} onPress={() => navigation.navigate('Playlist', { playlistId: item.id })} />
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
+      <Header />
+      <FlatList
+        style={styles.list}
+        data={playlists}
+        renderItem={({ item }) => (
+          <View style={styles.content}> 
+            <Card title={item.title} />
+          </View>
+        )}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.contentContainer}
+      />
     </View>
   );
 };
@@ -34,9 +36,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#1A1A1A',
   },
   list: {
-    alignItems: 'center',
-    width: '100%',
-  }
+    flex: 1,
+    marginBottom: 20
+  },
+  content: {
+    alignSelf: 'center',
+  },
 });
 
 export default Home;
