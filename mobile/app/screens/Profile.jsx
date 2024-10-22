@@ -1,15 +1,22 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, Image, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 
-const Profile = ({ navigation }) => {
+export default function Profile() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>User Profile</Text>
-      <Text style={styles.info}>Name: John Doe</Text>
+      <LinearGradient
+        colors={['#000000', '#232323']}
+        style={styles.parallax}
+      >
+        <Image source={require('../../assets/profile.png')} style={styles.icon} />
+        <Text style={styles.name}>John Doe</Text>
+      </LinearGradient>
       <Text style={styles.info}>Email: john.doe@example.com</Text>
-      <Button title="Edit Profile" onPress={() => {}} color="#FF6A00" />
-      <Button title="Logout" onPress={() => navigation.replace('SignIn')} color="#FF6A00" />
-    </View>
+      <Button title="Edit Profile" onPress={() => { }} color="#FF6A00" />
+      <Button title="Logout" onPress={() => router.push("/screens/SignIn")} color="#FF6A00" />
+    </View >
   );
 };
 
@@ -31,5 +38,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default Profile;

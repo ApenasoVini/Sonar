@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Image } from 'react-native';
+import { View, TextInput, StyleSheet, Image, Pressable } from 'react-native';
+import { router } from 'expo-router';
 
 const Header = () => {
   return (
@@ -17,7 +18,9 @@ const Header = () => {
         />
       </View>
       <View style={styles.iconContainer}>
-        <Image source={require('../assets/profile.png')} style={styles.icon} />
+        <Pressable onPress={() => router.push("/screens/Profile")}>
+          <Image source={require('../assets/profile.png')} style={styles.icon} />
+        </Pressable>
       </View>
     </View>
   );
