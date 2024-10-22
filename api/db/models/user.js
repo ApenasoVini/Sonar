@@ -7,11 +7,11 @@ const User = db.define('user', {
         primaryKey: true,
         allowNull: false,
     },
-    nome: {
+    firstName: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
     },
-    sobrenome: {
+    lastName: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
     },
@@ -20,11 +20,11 @@ const User = db.define('user', {
         allowNull: false,
         unique: true
     },
-    dataNascimento: {
+    dateBirth: {
         type: Sequelize.DataTypes.DATEONLY,
         allowNull: false
     },
-    senha: {
+    password: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
     },
