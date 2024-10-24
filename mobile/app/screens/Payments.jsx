@@ -9,36 +9,40 @@ const Payments = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Complete seus dados</Text>
-      <View style={styles.content}>
+      <View style={styles.add}>
         <Text style={styles.textOne}>R$ 10,99/mês</Text>
         <Text style={styles.textTwo}>Tenha acesso ao melhor App de música!</Text>
       </View>
       <View style={styles.card}>
         <TextInput
-          style={styles.input1}
+          style={styles.input}
           placeholder="Nome Completo"
           onChangeText={setNome}
+          placeholderTextColor='#FFF'
           keyboardType='default'
         />
         <TextInput
-          style={styles.input2}
+          style={styles.input}
           placeholder="Nº do cartão"
+          placeholderTextColor='#FFF'
           onChangeText={setCardNumber}
           keyboardType='number-pad'
           maxLength={15}
         />
         <View style={styles.span}>
           <TextInput
-            style={styles.input3}
+            style={styles.input}
             placeholder="Código"
             onChangeText={setCardNumber}
+            placeholderTextColor='#FFF'
             keyboardType='number-pad'
             maxLength={3}
           />
           <TextInput
-            style={styles.input4}
+            style={styles.input}
             placeholder="Validade"
             onChangeText={setCardNumber}
+            placeholderTextColor='#FFF'
             keyboardType='number-pad'
             maxLength={3}
           />
@@ -64,7 +68,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  content: {
+  add: {
     backgroundColor: '#000',
     borderRadius: 20,
     justifyContent: 'center',
@@ -77,17 +81,10 @@ const styles = StyleSheet.create({
   textTwo: {
     color: '#CCC'
   },
-  input1: {
+  input: {
     borderWidth: 1,
-    borderColor: '#252729',
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: '#2A2A2A',
-  },
-  input2: {
-    borderWidth: 1,
-    borderColor: '#252729',
-    marginBottom: 20,
+    borderColor: '#000',
+    marginVertical: 10,
     padding: 10,
     backgroundColor: '#2A2A2A',
   },
@@ -95,23 +92,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
-  input3: {
-    borderWidth: 1,
-    borderColor: '#252729',
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: '#2A2A2A',
-  },
-  input4: {
-    borderWidth: 1,
-    borderColor: '#252729',
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: '#2A2A2A',
-  },
   card: {
     backgroundColor: '#454444',
     borderRadius: 7,
+    justifyContent: 'center',
     padding: 10,
   },
   press: {
