@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, Image, StyleSheet } from 'react-native';
+import { View, Text, Pressable, Image, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 
@@ -14,8 +14,9 @@ export default function Profile() {
         <Text style={styles.name}>John Doe</Text>
       </LinearGradient>
       <Text style={styles.info}>Email: john.doe@example.com</Text>
-      <Button title="Edit Profile" onPress={() => { }} color="#FF6A00" />
-      <Button title="Logout" onPress={() => router.push("/screens/SignIn")} color="#FF6A00" />
+      <Pressable title="Edit Profile" onPress={() => { }} color="#FF6A00">
+        <Text>Concluir</Text>
+      </Pressable>
     </View >
   );
 };

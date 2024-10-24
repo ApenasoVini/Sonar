@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 const SignUp = () => {
@@ -11,7 +11,9 @@ const SignUp = () => {
       <TextInput placeholder="Email" style={styles.input} inputMode='email' placeholderTextColor="#ccc" />
       <TextInput placeholder="Data de Nascimento" style={styles.input} placeholderTextColor="#ccc" />
       <TextInput placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
-      <Button title="Cadastrar" onPress={() => router.push("/screens/Home")} color="#FF6A00" />
+      <Pressable style={styles.press} onPress={() => router.push("/screens/Payments")}>
+        <Text style={styles.pressText}>Continuar</Text>
+      </Pressable>
       <View style={styles.signin}>
         <Text style={styles.signinText}>Já tem uma conta? </Text>
         <Text style={styles.signinLink} onPress={() => router.push("/screens/SignIn")}>Login</Text>
@@ -41,6 +43,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     color: '#fff',
     backgroundColor: '#2A2A2A',
+  },
+  press: {
+    backgroundColor: '#FF6A00',
+    width: '100%',
+    paddingVertical: 12
+  },
+  pressText: {
+    color: '#FFF',
+    fontWeight: '700',
+    textAlign: 'center',
+    textTransform: 'uppercase'
   },
   signin: {
     marginTop: 20,
