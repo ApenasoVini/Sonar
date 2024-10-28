@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import axios from 'axios';
 
 const SignUp = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [dateBirth, setDateBirth] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignUp = async () => {
+    try {
+      await axios.post('http://localhost:3000/api/auth/signup', {
+        firstName,
+        lastName,
+        email,
+        dateBirth,
+        password,
+      });
+      router.push("/screens/SignIn");
+    } catch (error) {
+      alert(error.response ? error.response.data.message : "Erro ao cadastrar.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Crie sua conta</Text>
-      <TextInput placeholder="Nome" style={styles.input} inputMode='text' placeholderTextColor="#ccc" />
-      <TextInput placeholder="Sobrenome" style={styles.input} inputMode='text' placeholderTextColor="#ccc" />
-      <TextInput placeholder="Email" style={styles.input} inputMode='email' placeholderTextColor="#ccc" />
-      <TextInput placeholder="Data de Nascimento" style={styles.input} placeholderTextColor="#ccc" />
-      <TextInput placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
-      <Pressable style={styles.press} onPress={() => router.push("/screens/Payments")}>
+      <TextInput value={firstName} onChangeText={setFirstName} placeholder="Nome" style={styles.input} placeholderTextColor="#ccc" />
+      <TextInput value={lastName} onChangeText={setLastName} placeholder="Sobrenome" style={styles.input} placeholderTextColor="#ccc" />
+      <TextInput value={email} onChangeText={setEmail} placeholder="Email" style={styles.input} placeholderTextColor="#ccc" />
+      <TextInput value={dateBirth} onChangeText={setDateBirth} placeholder="Data de Nascimento" style={styles.input} placeholderTextColor="#ccc" />
+      <TextInput value={password} onChangeText={setPassword} placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
+      <Pressable style={styles.press} onPress={handleSignUp}>
         <Text style={styles.pressText}>Continuar</Text>
       </Pressable>
       <View style={styles.signin}>

@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import axios from 'axios';
 
 const SignIn = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignIn = async () => {
+    try {
+      await axios.post('http://localhost:3000/api/auth/login', { email, password });
+      router.push("/screens/Home");
+    } catch (error) {
+      alert(error.response ? error.response.data.message : "Erro ao fazer login.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Bem vindo de volta!</Text>
-      <TextInput placeholder="Email" style={styles.input} inputMode='email' placeholderTextColor="#ccc" />
-      <TextInput placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
-      <Pressable style={styles.press} onPress={() => router.push("/screens/Home")}>
+      <TextInput value={email} onChangeText={setEmail} placeholder="Email" style={styles.input} inputMode='email' placeholderTextColor="#ccc" />
+      <TextInput value={password} onChangeText={setPassword} placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
+      <Pressable style={styles.press} onPress={handleSignIn}>
         <Text style={styles.pressText}>Entrar</Text>
       </Pressable>
       <View style={styles.signup}>
