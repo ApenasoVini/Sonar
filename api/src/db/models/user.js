@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize'
+import Sequelize, { DataTypes } from 'sequelize'
 import db from '../db.js'
 
 const User = db.define('user', {
@@ -6,13 +6,14 @@ const User = db.define('user', {
         type: Sequelize.DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
+        autoIncrement: true,
     },
-    firstName: {
+    name: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
     },
-    lastName: {
-        type: Sequelize.DataTypes.STRING,
+    username: {
+        type: Sequelize.STRING,
         allowNull: false,
     },
     email: {
@@ -24,8 +25,19 @@ const User = db.define('user', {
         type: Sequelize.DataTypes.DATEONLY,
         allowNull: false
     },
+    description: {
+        type: Sequelize.STRING,
+    },
     password: {
         type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+    },
+    profileImage: {
+        type: Sequelize.STRING,
+    },
+    userType: {
+        type: DataTypes.ENUM('user', 'artist', 'admin'),
+        defaultValue: 'user',
         allowNull: false,
     },
     status: {
