@@ -12,7 +12,7 @@ const SignUp = () => {
   const [description, setDescription] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [profilePic, setProfilePic] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
 
   const handleSignUp = async () => {
     if (!email || !name || !password || !username || !passwordConfirm) return;
@@ -28,17 +28,17 @@ const SignUp = () => {
     formData.append('password', password);
     formData.append('description', description);
     formData.append('dateBirth', dateBirth);
-    if (profilePic) {
-      formData.append('profilePic', {
-        uri: profilePic.uri,
-        type: profilePic.mimeType,
-        name: profilePic.fileName,
+    if (profileImage) {
+      formData.append('profileImage', {
+        uri: profileImage.uri,
+        type: profileImage.mimeType,
+        name: profileImage.fileName,
       });
     }
 
     try {
       await axios.post(
-        "http://localhost:8000/user/register",
+        "http://10.0.2.2:8000/user/register",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -46,7 +46,7 @@ const SignUp = () => {
       router.push("/screens/Payments");
     }
     catch (e) {
-      console.log(e);
+      console.log(e)
       Alert.alert("Um erro ocorreu! Tente novamente.");
     }
   }
@@ -59,7 +59,7 @@ const SignUp = () => {
       quality: 1,
     });
     if (!result.canceled) {
-      setProfilePic(result.assets[0]);
+      setProfileImage(result.assets[0]);
     }
   };
 
@@ -73,9 +73,9 @@ const SignUp = () => {
       <TextInput value={description} onChangeText={setDescription} placeholder="Descrição" style={styles.input} placeholderTextColor="#ccc" />
       <TextInput value={password} onChangeText={setPassword} placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
       <TextInput value={passwordConfirm} onChangeText={setPasswordConfirm} placeholder="Confirme sua senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
-      {profilePic !== null ? (
+      {profileImage !== null ? (
         <Pressable onPress={pickImage} style={styles.buttonImg}>
-          <Image source={{ uri: profilePic.uri }} style={styles.image} />
+          <Image source={{ uri: profileImage.uri }} style={styles.image} />
         </Pressable>
       )
         : (

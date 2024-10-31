@@ -22,8 +22,8 @@ const createUser = async (req, res) => {
       return res.status(400).send({ error: 'Esse username já está sendo usado' });
     }
 
-    if (req.files && req.files['profilePic']) {
-      const imageFile = req.files['profilePic'][0];
+    if (req.files && req.files['profileImage']) {
+      const imageFile = req.files['profileImage'][0];
       const upload = await uploadImage(imageFile);
       if (upload !== 'err') data.profileImage = upload;
     }
@@ -40,6 +40,32 @@ const createUser = async (req, res) => {
     console.error(e);
     return res.status(500).send({
       error: 'Erro interno ao criar o usuário.',
+      details: e.message,
+    });
+  }
+};
+
+const login = async (req, res) => {
+  try {
+    const data = req.body;
+    const user = await User.findOne({ where: { email: data.email, } });
+    if (!user) return res.status(400).json({ error: 'Email ou senha incorretos' });
+
+    const ok = await bcrypt.compare(data.password, user.password);
+    console.log(ok)
+    if (!ok) return res.status(400).json({ error: 'Email ou senha incorretos' });
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, userType: user.userType },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+    return res.status(200).json({ status: 'success', token });
+
+  } catch (e) {
+    console.error("Erro no login:", e.message);
+    return res.status(500).send({
+      error: 'Erro interno no login.',
       details: e.message,
     });
   }
@@ -128,30 +154,6 @@ const updateUser = async (req, res) => {
     });
   }
 }
-
-const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(400).json({ error: 'Email ou senha incorretos' });
-    if (!user.active) return res.status(400).json({ error: 'Usuário inativo' });
-
-    const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(400).json({ error: 'Email ou senha incorretos' });
-
-    const token = jwt.sign(
-      { id: user.id, email: user.email, userType: user.userType },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
-    return res.status(200).json({ status: 'success', token });
-
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: 'Erro interno no servidor' });
-  }
-};
 
 const getAllUsers = async (req, res) => {
   try {

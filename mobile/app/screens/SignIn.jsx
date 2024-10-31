@@ -9,7 +9,7 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     try {
-      await axios.post('http://localhost:3000/api/auth/login', { email, password });
+      await axios.post('http://10.0.2.2:8000/user/login', { email, password });
       router.push("/screens/Home");
     } catch (error) {
       alert(error.response ? error.response.data.message : "Erro ao fazer login.");
