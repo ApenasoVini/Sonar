@@ -157,27 +157,33 @@ const updateUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
-    return res.status(200).json(users);
+    let { username } = req.query;
+    const conditions = {};
+
+    if (!username || username === "") {
+      username = "";
+    }
+
+    if (username) {
+      conditions.username = {
+        [Op.like]: `%${username}%`,
+      };
+    }
+
+    const users = await User.findAll({
+      where: conditions,
+      attributes: {
+        exclude: ['password']
+      },
+    });
+
+    return res.status(200).send({
+      "status": "success",
+      "data": users,
+    });
   } catch (error) {
     return res.status(500).json({ message: 'Erro ao buscar usuários.', error });
   }
 };
 
-const searchUserByUsername = async (req, res) => {
-  const { username } = req.query;
-
-  try {
-    const users = await User.findAll({
-      where: {
-        username: { [Sequelize.Op.like]: `%${username}%` },
-      },
-    });
-
-    return res.status(200).json(users);
-  } catch (error) {
-    return res.status(500).json({ message: 'Erro ao buscar usuários por nome.', error });
-  }
-};
-
-export { createUser, getUserById, searchUserByUsername, updateUser, login, deleteUser, getAllUsers };
+export { createUser, getUserById, updateUser, login, deleteUser, getAllUsers };
