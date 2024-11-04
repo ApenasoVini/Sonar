@@ -13,7 +13,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-
+  const [userId, setUserId] = useState(null); 
+  
   const handleSignUp = async () => {
     if (!email || !name || !password || !username || !passwordConfirm) return;
 
@@ -37,16 +38,16 @@ const SignUp = () => {
     }
 
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://10.0.2.2:8000/user/register",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
+      setUserId(response.data.id); 
       Alert.alert("Usuário criado com sucesso.");
       router.push("/screens/Payments");
-    }
-    catch (e) {
-      console.log(e)
+    } catch (e) {
+      console.log(e);
       Alert.alert("Um erro ocorreu! Tente novamente.");
     }
   }
@@ -77,12 +78,11 @@ const SignUp = () => {
         <Pressable onPress={pickImage} style={styles.buttonImg}>
           <Image source={{ uri: profileImage.uri }} style={styles.image} />
         </Pressable>
-      )
-        : (
-          <Pressable onPress={pickImage} style={styles.buttonImg}>
-            <Text>Adicionar Foto</Text>
-          </Pressable>
-        )}
+      ) : (
+        <Pressable onPress={pickImage} style={styles.buttonImg}>
+          <Text>Adicionar Foto</Text>
+        </Pressable>
+      )}
 
       <Pressable style={styles.press} onPress={handleSignUp}>
         <Text style={styles.pressText}>Cadastrar</Text>

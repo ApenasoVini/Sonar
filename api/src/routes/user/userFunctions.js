@@ -2,7 +2,7 @@ import { User } from '../../db/models/user.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { uploadImage } from '../../cloudinary/cloudinary.js';
-import Sequelize from 'sequelize';
+import { Op } from "sequelize";
 
 const createUser = async (req, res) => {
   try {
@@ -22,11 +22,11 @@ const createUser = async (req, res) => {
       return res.status(400).send({ error: 'Esse username já está sendo usado' });
     }
 
-    if (req.files && req.files['profileImage']) {
+    if(req.files) {
       const imageFile = req.files['profileImage'][0];
       const upload = await uploadImage(imageFile);
-      if (upload !== 'err') data.profileImage = upload;
-    }
+      if(upload !== "err") data.profileImage = upload;
+  }
 
     const salt = await bcrypt.genSalt();
     data.password = await bcrypt.hash(data.password, salt);
@@ -105,35 +105,49 @@ const deleteUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.id !== id) {
+      return res.status(403).json({ error: 'Acesso negado. Você só pode deletar seu próprio perfil.' });
+    }
+
     const userExists = await User.findOne({ where: { id: id } });
     if (!userExists) {
       return res.status(400).send({
-        "error": "Usuário não existente",
+        error: 'Usuário não existente',
       });
     }
+
     await User.destroy({
       where: {
         id: id,
       },
     });
-    return res.status(200).json({ "status": "success" });
-  }
-  catch (e) {
+    return res.status(200).json({ status: 'success' });
+  } catch (e) {
     return res.status(500).send({
-      "error": `${e}`,
+      error: `${e}`,
     });
   }
-}
+};
 
 const updateUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const data = req.body;
 
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.id !== id) {
+      return res.status(403).json({ error: 'Acesso negado. Você só pode atualizar seu próprio perfil.' });
+    }
+
     const userExists = await User.findOne({ where: { id: id } });
     if (!userExists) {
       return res.status(400).send({
-        "error": "Usuário não existente",
+        error: 'Usuário não existente',
       });
     }
 
@@ -145,15 +159,14 @@ const updateUser = async (req, res) => {
         }
       },
     );
-    return res.status(200).json({ "status": "success" });
-  }
-  catch (e) {
-    console.log(e)
+    return res.status(200).json({ status: 'success' });
+  } catch (e) {
+    console.log(e);
     return res.status(500).send({
-      "error": `${e}`,
+      error: `${e}`,
     });
   }
-}
+};
 
 const getAllUsers = async (req, res) => {
   try {
@@ -168,6 +181,7 @@ const getAllUsers = async (req, res) => {
       conditions.username = {
         [Op.like]: `%${username}%`,
       };
+      console.log(conditions)
     }
 
     const users = await User.findAll({

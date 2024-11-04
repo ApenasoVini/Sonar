@@ -1,34 +1,63 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import React, { useContext, useState } from 'react';
+import { View, TextInput, Pressable, Text, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { router } from 'expo-router';
+import { AppContext } from '../context/AppContext';
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { setToken, setUser } = useContext(AppContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSignIn = async () => {
+    if (!email || !password) return;
+
     try {
-      await axios.post('http://10.0.2.2:8000/user/login', { email, password });
+      const response = await axios.post("http://10.0.2.2:8000/user/login", {
+        email,
+        password,
+      });
+      setToken(response.data.token);
+      setUser({
+        id: response.data.user.id,
+        name: response.data.user.name,
+        username: response.data.user.username,
+        email: response.data.user.email,
+        dateBirth: response.data.user.dateBirth,
+        profileImage: response.data.user.profileImage,
+      });
+      Alert.alert("Login realizado com sucesso.");
       router.push("/screens/Home");
-    } catch (error) {
-      alert(error.response ? error.response.data.message : "Erro ao fazer login.");
+    } catch (e) {
+      console.log(e);
+      Alert.alert("Um erro ocorreu! Tente novamente.");
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bem vindo de volta!</Text>
-      <TextInput value={email} onChangeText={setEmail} placeholder="Email" style={styles.input} inputMode='email' placeholderTextColor="#ccc" />
-      <TextInput value={password} onChangeText={setPassword} placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
+      <TextInput
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Email"
+        style={styles.input}
+        placeholderTextColor="#ccc"
+      />
+      <TextInput
+        value={password}
+        onChangeText={setPassword}
+        placeholder="Senha"
+        secureTextEntry
+        style={styles.input}
+        placeholderTextColor="#ccc"
+      />
       <Pressable style={styles.press} onPress={handleSignIn}>
         <Text style={styles.pressText}>Entrar</Text>
       </Pressable>
-      <View style={styles.signup}>
-        <Text style={styles.signupText}>Não tem uma conta? </Text>
-        <Text style={styles.signupLink} onPress={() => router.push("/screens/SignUp")}>Cadastar</Text>
-      </View>
-    </View >
+      <Text style={styles.signUpText} onPress={() => router.push("/screens/SignUp")}>
+        Não tem uma conta? Cadastre-se
+      </Text>
+    </View>
   );
 };
 
