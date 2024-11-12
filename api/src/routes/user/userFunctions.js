@@ -2,7 +2,7 @@ import { User } from '../../db/models/user.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { uploadImage } from '../../cloudinary/cloudinary.js';
-import { Op } from "sequelize";
+import { Op } from 'sequelize';
 
 const createUser = async (req, res) => {
   try {
@@ -22,11 +22,11 @@ const createUser = async (req, res) => {
       return res.status(400).send({ error: 'Esse username já está sendo usado' });
     }
 
-    if(req.files) {
+    if (req.files) {
       const imageFile = req.files['profileImage'][0];
       const upload = await uploadImage(imageFile);
-      if(upload !== "err") data.profileImage = upload;
-  }
+      if (upload !== 'err') data.profileImage = upload;
+    }
 
     const salt = await bcrypt.genSalt();
     data.password = await bcrypt.hash(data.password, salt);
@@ -63,7 +63,7 @@ const login = async (req, res) => {
     return res.status(200).json({ status: 'success', token });
 
   } catch (e) {
-    console.error("Erro no login:", e.message);
+    console.error('Erro no login:', e.message);
     return res.status(500).send({
       error: 'Erro interno no login.',
       details: e.message,
@@ -85,18 +85,18 @@ const getUserById = async (req, res) => {
     });
     if (!user) {
       return res.status(400).send({
-        "error": "Usuário não existente",
+        'error': 'Usuário não existente',
       });
     }
 
     return res.status(200).send({
-      "status": "success",
-      "data": user
+      'status': 'success',
+      'data': user
     });
   }
   catch (e) {
     return res.status(500).send({
-      "error": `${e}`,
+      'error': `${e}`,
     });
   }
 }
@@ -124,7 +124,9 @@ const deleteUser = async (req, res) => {
         id: id,
       },
     });
-    return res.status(200).json({ status: 'success' });
+    return res.status(200).json({
+      'status': 'success',
+    });
   } catch (e) {
     return res.status(500).send({
       error: `${e}`,
@@ -159,7 +161,10 @@ const updateUser = async (req, res) => {
         }
       },
     );
-    return res.status(200).json({ status: 'success' });
+    return res.status(200).json({
+      'status': 'success',
+      'data': data
+    });
   } catch (e) {
     console.log(e);
     return res.status(500).send({
@@ -173,8 +178,8 @@ const getAllUsers = async (req, res) => {
     let { username } = req.query;
     const conditions = {};
 
-    if (!username || username === "") {
-      username = "";
+    if (!username || username === '') {
+      username = '';
     }
 
     if (username) {
@@ -192,8 +197,8 @@ const getAllUsers = async (req, res) => {
     });
 
     return res.status(200).send({
-      "status": "success",
-      "data": users,
+      'status': 'success',
+      'data': users,
     });
   } catch (error) {
     return res.status(500).json({ message: 'Erro ao buscar usuários.', error });

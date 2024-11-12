@@ -2,7 +2,8 @@ import React, { useContext, useState } from 'react';
 import { View, TextInput, Pressable, Text, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { router } from 'expo-router';
-import { AppContext } from '../context/AppContext';
+import { AppContext } from '../../scripts/AppContext';
+import { jwtDecode } from 'jwt-decode'
 
 const SignIn = () => {
   const { setToken, setUser } = useContext(AppContext);
@@ -13,26 +14,19 @@ const SignIn = () => {
     if (!email || !password) return;
 
     try {
-      const response = await axios.post("http://10.0.2.2:8000/user/login", {
-        email,
-        password,
-      });
-      setToken(response.data.token);
-      setUser({
-        id: response.data.user.id,
-        name: response.data.user.name,
-        username: response.data.user.username,
-        email: response.data.user.email,
-        dateBirth: response.data.user.dateBirth,
-        profileImage: response.data.user.profileImage,
-      });
-      Alert.alert("Login realizado com sucesso.");
+      const res = await axios.post(
+        "http://10.0.2.2:8000/user/login",
+        { "email": email, "password": password }
+      );
+      setToken(res.data.token);
+      const user = jwtDecode(res.data.token);
+      setUser(user);
       router.push("/screens/Home");
-    } catch (e) {
-      console.log(e);
-      Alert.alert("Um erro ocorreu! Tente novamente.");
     }
-  };
+    catch (e) {
+      Alert.alert("Um erro ocorreu, tente novamente!");
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -54,7 +48,7 @@ const SignIn = () => {
       <Pressable style={styles.press} onPress={handleSignIn}>
         <Text style={styles.pressText}>Entrar</Text>
       </Pressable>
-      <Text style={styles.signUpText} onPress={() => router.push("/screens/SignUp")}>
+      <Text style={styles.signupText} onPress={() => router.push("/screens/SignUp")}>
         Não tem uma conta? Cadastre-se
       </Text>
     </View>
