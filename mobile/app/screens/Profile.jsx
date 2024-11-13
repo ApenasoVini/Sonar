@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet, Text, Image, Pressable, Alert, TextInput } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { AppContext } from "../../scripts/AppContext";
 
@@ -32,16 +33,35 @@ export default function Profile() {
     }
   };
 
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      Alert.alert("Permissão para acessar a galeria é necessária!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setData({ ...data, profileImage: result.uri });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.ImageContainer}>
-        {
-          data.profileImage ? (
+        <Pressable onPress={pickImage}>
+          {data.profileImage ? (
             <Image source={{ uri: data.profileImage }} style={styles.profileImage} />
           ) : (
             <Image source={require('../../assets/profile.png')} style={styles.profileImage} />
-          )
-        }
+          )}
+        </Pressable>
       </View>
       <View style={styles.InfoContainer}>
         {isEditing ? (
