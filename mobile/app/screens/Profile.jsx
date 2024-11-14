@@ -5,11 +5,12 @@ import axios from 'axios';
 import { AppContext } from "../../scripts/AppContext";
 
 export default function Profile() {
-  const { user } = useContext(AppContext);
+  const { user, token } = useContext(AppContext);
   const [data, setData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  useEffect(() => {
     const getUserInfo = async () => {
       try {
         const res = await axios.get(`http://10.0.2.2:8000/user/${user.id}`);
@@ -19,20 +20,61 @@ export default function Profile() {
       }
     };
     getUserInfo();
+
+    useEffect(() => {
+      getUserInfo()
   }, []);
 
   const handleEditProfile = async () => {
+    if (newPassword && newPassword !== confirmPassword) {
+      Alert.alert("As senhas não coincidem.");
+      return;
+    }
+  
     try {
-      const res = await axios.put(`http://10.0.2.2:8000/user/${user.id}`, data);
-      setData(res.data.data);
+      const formData = new FormData();
+  
+      if (data.profileImage) {
+        const file = {
+          uri: data.profileImage,
+          type: 'image/jpeg',
+          name: 'profileImage.jpg',
+        };
+        formData.append('profileImage', file);
+      }
+  
+      formData.append('name', data.name);
+      formData.append('username', data.username);
+      formData.append('description', data.description);
+      formData.append('dateBirth', data.dateBirth);
+  
+      if (newPassword) {
+        formData.append('password', newPassword);
+      }
+  
+      const res = await axios.patch(
+        `http://10.0.2.2:8000/user/${user.id}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`, 
+          },
+        }
+      );
+  
+      setData(res.data); 
       setIsEditing(false);
       Alert.alert('Perfil atualizado com sucesso');
+      await getUserInfo()
+      setNewPassword('');
+      setConfirmPassword('');
     } catch (e) {
       console.log(e);
       Alert.alert('Erro ao atualizar perfil');
     }
   };
-
+  
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
@@ -73,11 +115,6 @@ export default function Profile() {
             />
             <TextInput
               style={styles.input}
-              value={data.email}
-              onChangeText={(text) => setData({ ...data, email: text })}
-            />
-            <TextInput
-              style={styles.input}
               value={data.name}
               onChangeText={(text) => setData({ ...data, name: text })}
             />
@@ -90,6 +127,20 @@ export default function Profile() {
               style={styles.input}
               value={data.dateBirth}
               onChangeText={(text) => setData({ ...data, dateBirth: text })}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Nova Senha"
+              secureTextEntry
+              value={newPassword}
+              onChangeText={setNewPassword}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Confirme a Nova Senha"
+              secureTextEntry
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
             />
           </>
         ) : (

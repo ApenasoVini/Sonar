@@ -10,6 +10,6 @@ userRoutes.post('/login', upload.single('file'), login);
 userRoutes.get('/:id', getUserById);
 userRoutes.delete('/:id', deleteUser);
 userRoutes.get('/', getAllUsers);
-userRoutes.put('/:id', updateUser);
+userRoutes.patch('/:id', upload.fields([{ name: 'profileImage', maxCount: 1 }]), updateUser);
 
 export default userRoutes;

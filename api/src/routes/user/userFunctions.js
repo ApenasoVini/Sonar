@@ -137,9 +137,14 @@ const deleteUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const data = req.body;
+    const { password, name, username, description, dateBirth } = req.body;
+    const authHeader = req.headers.authorization;
 
-    const token = req.headers.authorization.split(' ')[1];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Token não fornecido ou formato incorreto' });
+    }
+
+    const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (decoded.id !== id) {
@@ -148,27 +153,46 @@ const updateUser = async (req, res) => {
 
     const userExists = await User.findOne({ where: { id: id } });
     if (!userExists) {
-      return res.status(400).send({
-        error: 'Usuário não existente',
-      });
+      return res.status(400).send({ error: 'Usuário não existente' });
     }
 
-    await User.update(
-      data,
-      {
-        where: {
-          id: id,
-        }
-      },
-    );
+    const updatedData = {};
+
+    if (password) {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      updatedData.password = hashedPassword;
+    }
+
+    if (req.files) {
+      const imageFile = req.files['profileImage'][0];
+      const upload = await uploadImage(imageFile);
+      if (upload !== 'err') {
+        updatedData.profileImage = upload;
+      } else {
+        return res.status(500).json({ error: 'Erro ao fazer upload da imagem.' });
+      }
+    }
+
+    if (name) updatedData.name = name;
+    if (username) updatedData.username = username;
+    if (description) updatedData.description = description;
+    if (dateBirth) updatedData.dateBirth = dateBirth;
+
+    await User.update(updatedData, { where: { id: id } });
+
     return res.status(200).json({
-      'status': 'success',
-      'data': data
+      status: 'success',
+      data: updatedData,
     });
   } catch (e) {
-    console.log(e);
+    console.error('Erro ao atualizar usuário:', e);
+    if (e.name === 'JsonWebTokenError' || e.name === 'TokenExpiredError') {
+      return res.status(401).send({ error: 'Token inválido ou expirado' });
+    }
     return res.status(500).send({
-      error: `${e}`,
+      error: 'Erro interno ao atualizar o usuário.',
+      details: e.message,
     });
   }
 };
