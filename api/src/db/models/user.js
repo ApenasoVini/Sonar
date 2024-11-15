@@ -1,39 +1,39 @@
-import Sequelize, { DataTypes } from 'sequelize'
-import db from '../db.js'
+import { DataTypes } from 'sequelize';
+import db from '../db.js';
 
 const User = db.define('user', {
     id: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
     },
     name: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     username: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     email: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
     },
     dateBirth: {
-        type: Sequelize.DataTypes.DATEONLY,
-        allowNull: false
+        type: DataTypes.DATEONLY,
+        allowNull: false,
     },
     description: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING(300),
     },
     password: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     profileImage: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
     },
     userType: {
         type: DataTypes.ENUM('user', 'artist', 'admin'),
@@ -41,10 +41,10 @@ const User = db.define('user', {
         allowNull: false,
     },
     status: {
-        type: Sequelize.DataTypes.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: false
-    }
-})
+        defaultValue: false,
+    },
+});
 
 export { User };

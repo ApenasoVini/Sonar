@@ -1,37 +1,25 @@
-import Sequelize from 'sequelize'
-import db from '../db.js'
-import { Music } from './music.js';
-import { User } from './user.js';
+import { DataTypes } from 'sequelize';
+import db from '../db.js';
 
 const Playlist = db.define('playlist', {
     id: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false
+        allowNull: false,
+        autoIncrement: true,
     },
     name: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
-    userId: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
+    playlistImage: {
+        type: DataTypes.STRING,
     },
-    musicId: {
-        type: Sequelize.DataTypes.INTEGER,
+    isOwner: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        references: {
-            model: Music,
-            key: 'id'
-        }
-    }
-})
-
-User.belongsToMany(Music, { through: Playlist });
-Music.belongsToMany(User, { through: Playlist });
+        defaultValue: false,
+    },
+});
 
 export { Playlist };

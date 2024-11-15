@@ -1,38 +1,16 @@
-import Sequelize from 'sequelize';
+import { DataTypes } from 'sequelize';
 import db from '../db.js';
-import { User } from './user.js';
-import { Music } from './music.js';
 
 const History = db.define('history', {
     id: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
-    userId: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id'
-        }
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
     },
-    musicId: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Music,
-            key: 'id'
-        }
-    },
-    playedAt: {
-        type: Sequelize.DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW
-    }
 });
-
-User.belongsToMany(Music, { through: History });
-Music.belongsToMany(User, { through: History });
 
 export { History };

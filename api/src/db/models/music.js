@@ -1,31 +1,38 @@
-import Sequelize from 'sequelize';
+import { DataTypes } from 'sequelize';
 import db from '../db.js';
 
 const Music = db.define('music', {
     id: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
         autoIncrement: true,
     },
-    title: {
-        type: Sequelize.DataTypes.STRING,
+    name: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
-    gender: {
-        type: Sequelize.DataTypes.ENUM('pop', 'rock', 'rap', 'jazz', 'blues', 'country', 'reggae', 'eletronica', 'musica classica', 'gospel', 'latina'),
+    genre: {
+        type: DataTypes.ENUM(
+            'pop', 'rock', 'rap', 'jazz', 'blues', 
+            'country', 'reggae', 'eletronica', 
+            'musica classica', 'gospel', 'latina'
+        ),
+        allowNull: false,
+    },
+    views: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
         allowNull: false,
     },
     duration: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     link: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-    }
-}, {
+    },
 });
 
 export { Music };
