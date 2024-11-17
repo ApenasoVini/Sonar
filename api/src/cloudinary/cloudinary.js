@@ -27,4 +27,33 @@ const uploadImage = async (file) => {
     }
 }
 
-export { uploadImage };
+const uploadAudio = async (file) => {
+    try {
+        if(file.size > 10000000) {
+            return "err";
+        }
+        const audioResult = await new Promise(
+            (resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { resource_type: 'video' },
+                    (error, result) => {
+                        if (error) reject(error);
+                        resolve({
+                            url: result?.secure_url,
+                            id: result?.public_id,
+                        });
+                    }
+                );
+                stream.end(file.buffer);
+            }
+        );
+        return audioResult.url;
+    }
+    catch (e) {
+        console.log(e)
+        return "err";
+    }
+}
+
+
+export { uploadImage, uploadAudio };

@@ -33,6 +33,18 @@ const Music = db.define('music', {
         allowNull: false,
         unique: true,
     },
+    authorId: { 
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'users', 
+            key: 'id',
+        },
+    },
+    audioUrl: {
+        type: DataTypes.STRING, 
+        allowNull: false,
+    }
 });
 
 export { Music };

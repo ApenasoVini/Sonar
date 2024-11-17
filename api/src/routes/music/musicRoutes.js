@@ -1,22 +1,18 @@
 import express from 'express';
 import {
     createMusic,
-    getAllMusic,
+    getAllMusics,
     getMusicById,
-    getMusicByGender,
-    getMusicByTitle,
     updateMusic,
     deleteMusic
 } from './musicFunctions.js';
 
-const router = express.Router();
+const musicRoutes = express.Router();
 
-router.post('/music', createMusic);
-router.get('/music', getAllMusic);
-router.get('/music/:id', getMusicById);
-router.get('/music/gender/:gender', getMusicByGender);
-router.get('/music/title/:title', getMusicByTitle);
-router.put('/music/:id', updateMusic);
-router.delete('/music/:id', deleteMusic);
+musicRoutes.post('/', createMusic);
+musicRoutes.get('/', getAllMusics);
+musicRoutes.get('/:id', getMusicById);
+musicRoutes.patch('/:id', updateMusic);
+musicRoutes.delete('/:id', deleteMusic);
 
-export default router;
+export default musicRoutes;
