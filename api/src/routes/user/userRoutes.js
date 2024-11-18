@@ -1,15 +1,16 @@
 import express from 'express';
-import { createUser, login, getUserById, deleteUser, updateUser, getAllUsers } from './userFunctions.js';
-import multer from 'multer'
+import { createUser, getUserById, updateUser, deleteUser, getAllUsers } from './userFunctions.js';
+import { validate } from '../auth/authFunctions.js';
+import multer from 'multer';
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const userRoutes = express.Router();
 
 userRoutes.post('/register', upload.fields([{ name: 'profileImage', maxCount: 1 }]), createUser);
-userRoutes.post('/login', upload.single('file'), login);
 userRoutes.get('/:id', getUserById);
-userRoutes.delete('/:id', deleteUser);
 userRoutes.get('/', getAllUsers);
-userRoutes.patch('/:id', upload.fields([{ name: 'profileImage', maxCount: 1 }]), updateUser);
+userRoutes.delete('/:id', validate, deleteUser);
+userRoutes.patch('/:id', validate, upload.fields([{ name: 'profileImage', maxCount: 1 }]), updateUser);
 
 export default userRoutes;

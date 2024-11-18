@@ -1,8 +1,8 @@
-import { DataTypes } from 'sequelize';
+import DataTypes from 'sequelize';
 import db from '../db.js';
 
 const Music = db.define('music', {
-    id: {
+    id: {   
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -27,11 +27,6 @@ const Music = db.define('music', {
     duration: {
         type: DataTypes.INTEGER,
         allowNull: false,
-    },
-    link: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
     },
     authorId: { 
         type: DataTypes.INTEGER,

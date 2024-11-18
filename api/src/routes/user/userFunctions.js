@@ -1,6 +1,5 @@
 import { User } from '../../db/models/user.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { uploadImage } from '../../cloudinary/cloudinary.js';
 import { Op } from 'sequelize';
 
@@ -45,32 +44,6 @@ const createUser = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
-  try {
-    const data = req.body;
-    const user = await User.findOne({ where: { email: data.email, } });
-    if (!user) return res.status(400).json({ error: 'Email ou senha incorretos' });
-
-    const ok = await bcrypt.compare(data.password, user.password);
-    console.log(ok)
-    if (!ok) return res.status(400).json({ error: 'Email ou senha incorretos' });
-
-    const token = jwt.sign(
-      { id: user.id, email: user.email, userType: user.userType },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
-    return res.status(200).json({ status: 'success', token });
-
-  } catch (e) {
-    console.error('Erro no login:', e.message);
-    return res.status(500).send({
-      error: 'Erro interno no login.',
-      details: e.message,
-    });
-  }
-};
-
 const getUserById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -103,15 +76,6 @@ const getUserById = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-
-    const token = req.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (decoded.id !== id) {
-      return res.status(403).json({ error: 'Acesso negado. Você só pode deletar seu próprio perfil.' });
-    }
-
     const userExists = await User.findOne({ where: { id: id } });
     if (!userExists) {
       return res.status(400).send({
@@ -136,21 +100,6 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    const { password, name, username, description, dateBirth } = req.body;
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Token não fornecido ou formato incorreto' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (decoded.id !== id) {
-      return res.status(403).json({ error: 'Acesso negado. Você só pode atualizar seu próprio perfil.' });
-    }
-
     const userExists = await User.findOne({ where: { id: id } });
     if (!userExists) {
       return res.status(400).send({ error: 'Usuário não existente' });
@@ -187,9 +136,6 @@ const updateUser = async (req, res) => {
     });
   } catch (e) {
     console.error('Erro ao atualizar usuário:', e);
-    if (e.name === 'JsonWebTokenError' || e.name === 'TokenExpiredError') {
-      return res.status(401).send({ error: 'Token inválido ou expirado' });
-    }
     return res.status(500).send({
       error: 'Erro interno ao atualizar o usuário.',
       details: e.message,
@@ -229,4 +175,4 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-export { createUser, getUserById, updateUser, login, deleteUser, getAllUsers };
+export { createUser, getUserById, updateUser, deleteUser, getAllUsers };

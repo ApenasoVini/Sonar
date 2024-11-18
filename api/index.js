@@ -2,6 +2,9 @@ import dotenv from 'dotenv';
 import express from 'express';
 import db from './src/db/db.js';
 import userRoutes from './src/routes/user/userRoutes.js';
+import authRoutes from './src/routes/auth/authRoutes.js';
+import musicRoutes from './src/routes/music/musicRoutes.js';
+import albumRoutes from './src/routes/album/albumRoutes.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 dotenv.config();
@@ -13,11 +16,13 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/user", userRoutes);
+app.use("/music", musicRoutes);
+app.use("/auth", authRoutes);
+app.use("/album", albumRoutes);
 app.get('/', (req, res) => {
     return res.status(200).json({ "msg": "This is the Sonar API" });
 });

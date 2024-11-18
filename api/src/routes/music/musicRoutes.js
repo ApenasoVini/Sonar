@@ -3,16 +3,15 @@ import {
     createMusic,
     getAllMusics,
     getMusicById,
-    updateMusic,
     deleteMusic
 } from './musicFunctions.js';
+import { validate } from '../auth/authFunctions.js'; 
 
 const musicRoutes = express.Router();
 
-musicRoutes.post('/', createMusic);
+musicRoutes.post('/', validate, createMusic);
 musicRoutes.get('/', getAllMusics);
 musicRoutes.get('/:id', getMusicById);
-musicRoutes.patch('/:id', updateMusic);
-musicRoutes.delete('/:id', deleteMusic);
+musicRoutes.delete('/:id', validate, deleteMusic);
 
 export default musicRoutes;

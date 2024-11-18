@@ -1,14 +1,14 @@
-import Sequelize from 'sequelize'
+import DataTypes from 'sequelize'
 import db from '../db.js'
 
 const Album = db.define('album', {
     id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
     name: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     duration: {
@@ -16,7 +16,7 @@ const Album = db.define('album', {
         allowNull: false,
     },
     albumImage: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
 })
