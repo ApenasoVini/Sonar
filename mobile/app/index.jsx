@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Image, Pressable, StyleSheet } from 'react-native';
+import { Text, Image, Pressable, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 
@@ -9,46 +9,75 @@ export default function SignUp() {
       colors={['#000000', '#232323']}
       style={styles.container}
     >
-      <Image style={styles.img} source={require('../assets/logo.png')} />
-      <Text style={styles.title}>Bem vindo!</Text>
-      <Pressable onPress={() => router.push("/screens/SignIn")} style={styles.press}>
-        <Text style={styles.text}>Login</Text>
+      <View style={styles.logoContainer}>
+        <Image style={styles.img} source={require('../assets/logo.png')} />
+      </View>
+      <Text style={styles.title}>Bem vindo a Sonar!</Text>
+      <Text style={styles.desc}>O melhor App de músicas</Text>
+      <Pressable onPress={() => router.push("/screens/SignUp")} style={styles.press1}>
+        <Text style={styles.text1}>Sign up</Text>
       </Pressable>
-      <Pressable onPress={() => router.push("/screens/SignUp")} style={styles.press}>
-        <Text style={styles.text}>Cadastrar</Text>
+      <Pressable onPress={() => router.push("/screens/SignIn")} style={styles.press2}>
+        <Text style={styles.text2}>Sign in</Text>
       </Pressable>
     </LinearGradient>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
+    paddingHorizontal: 20,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
   },
   img: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
   },
   title: {
-    fontSize: 32,
-    color: '#FF6A00',
-    marginBottom: 20,
+    fontSize: 24,
+    color: '#FFF',
+    fontWeight: 'bold',
+    marginBottom: 10,
     textAlign: 'center',
   },
-  press: {
-    width: '50%',
-    marginVertical: 10,
-    height: 45,
+  desc: {
+    fontSize: 16,
+    color: '#FFF',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  press1: {
+    width: '100%',
+    height: 50,
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#FF6A00',
+    borderRadius: 25,
+    marginVertical: 10,
   },
-  text: {
-    textAlign: 'center',
-    textTransform: 'uppercase',
-    color: '#fff',
-    fontSize: 15
+  press2: {
+    width: '100%',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 25,
+    marginVertical: 10,
+  },
+  text1: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  text2: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
