@@ -7,7 +7,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const userRoutes = express.Router();
 
-userRoutes.post('/register', upload.fields([{ name: 'profileImage', maxCount: 1 }]), createUser);
+userRoutes.post('/', upload.fields([{ name: 'profileImage', maxCount: 1 }]), createUser);
 userRoutes.get('/:id', getUserById);
 userRoutes.get('/', getAllUsers);
 userRoutes.delete('/:id', validate, deleteUser);

@@ -2,7 +2,7 @@ import DataTypes from 'sequelize';
 import db from '../db.js';
 
 const Music = db.define('music', {
-    id: {   
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -13,8 +13,8 @@ const Music = db.define('music', {
     },
     genre: {
         type: DataTypes.ENUM(
-            'pop', 'rock', 'rap', 'jazz', 'blues', 
-            'country', 'reggae', 'eletronica', 
+            'pop', 'rock', 'rap', 'jazz', 'blues',
+            'country', 'reggae', 'eletronica',
             'musica classica', 'gospel', 'latina'
         ),
         allowNull: false,
@@ -28,16 +28,8 @@ const Music = db.define('music', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    authorId: { 
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'users', 
-            key: 'id',
-        },
-    },
     audioUrl: {
-        type: DataTypes.STRING, 
+        type: DataTypes.STRING,
         allowNull: false,
     }
 });

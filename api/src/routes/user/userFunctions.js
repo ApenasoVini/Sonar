@@ -76,6 +76,7 @@ const getUserById = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
+    const { id } = req.params;
     const userExists = await User.findOne({ where: { id: id } });
     if (!userExists) {
       return res.status(400).send({
@@ -100,6 +101,8 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
+    const { id } = req.params;
+    const { name, username, description, dateBirth, password } = req.body
     const userExists = await User.findOne({ where: { id: id } });
     if (!userExists) {
       return res.status(400).send({ error: 'Usuário não existente' });
@@ -156,7 +159,6 @@ const getAllUsers = async (req, res) => {
       conditions.username = {
         [Op.like]: `%${username}%`,
       };
-      console.log(conditions)
     }
 
     const users = await User.findAll({

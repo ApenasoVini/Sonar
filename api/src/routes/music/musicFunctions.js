@@ -1,101 +1,108 @@
-import { Music } from '../../db/models/music.js';
-import { User } from '../../db/models/user.js';
+import History from '../../db/models/history.js'
 import { Op } from 'sequelize';
-import { uploadAudio } from '../../cloudinary/cloudinary.js';
+import { Music } from '../../db/models/music.js';
 
-const createMusic = async (req, res) => {
+const getMusic = async (req, res) => {
   try {
-      const { name, gender, duration } = req.body;
-      const audioFile = req.files?.audio;
+    let { genre, name } = req.query;
+    const conditions = {};
 
-      if (!audioFile) {
-          return res.status(400).json({ error: 'É necessário fornecer um áudio.' });
-      }
+    if (!genre || genre === '') {
+      genre = '';
+    }
 
-      const audioUrl = await uploadAudio(audioFile);
+    if (!name || name === '') {
+      name = '';
+    }
 
-      if (audioUrl === "err") {
-          return res.status(500).json({ error: 'Erro ao fazer upload do áudio.' });
-      }
+    if (name) {
+      conditions.name = {
+        [Op.like]: `%${name}%`,
+      };
+    }
 
-      const newMusic = await Music.create({
-          name,
-          gender,
-          duration,
-          audioUrl,
-          authorId: req.user.id 
-      });
+    if (genre) {
+      conditions.genre = {
+        [Op.like]: `%${genre}%`,
+      };
+    }
 
-      return res.status(201).json(newMusic);
-  } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Erro ao criar música.' });
+    const musics = await User.findAll({
+      where: conditions,
+    });
+
+    return res.status(200).send({
+      'status': 'success',
+      'data': musics,
+    });
+
+  } catch (e) {
+    return res.status(500).send({
+      'error ao buscar músicas': `${e}`,
+    });
   }
-};
-
-const deleteMusic = async (req, res) => {
-  try {
-      const music = await Music.findByPk(req.params.id);
-
-      if (!music) {
-          return res.status(404).json({ error: 'Música não encontrada.' });
-      }
-
-      if (music.authorId !== req.user?.id) {
-          return res.status(403).json({ error: 'Apenas o autor pode excluir esta música.' });
-      }
-
-      await music.destroy();
-      return res.status(204).send();
-  } catch (error) {
-      return res.status(500).json({ error: 'Erro ao deletar música.' });
-  }
-};
+}
 
 const getMusicById = async (req, res) => {
   try {
-    const music = await Music.findByPk(req.params.id);
-    if (!music) {
-      return res.status(404).json({ error: 'Música não encontrada.' });
-    }
-    return res.status(200).json(music);
-  } catch (error) {
-    return res.status(500).json({ error: 'Erro ao buscar música.' });
-  }
-};
+    const id = parseInt(req.params.id);
 
-const getAllMusics = async (req, res) => {
-  try {
-    const { name, gender, author } = req.query;
-    const filters = {};
-
-    if (name) filters.name = { [Op.like]: `%${name}%` };
-    if (gender) filters.gender = gender;
-
-    if (author) {
-      const authorUser = await User.findOne({ where: { name: { [Op.like]: `%${author}%` } } });
-      if (authorUser) {
-        filters.authorId = authorUser.id;
-      } else {
-        return res.status(404).json({ error: 'Autor não encontrado.' });
+    const music = await Music.findOne({
+      where: {
+        id: id
       }
+    });
+    if (!music) {
+      return res.status(400).send({
+        'error': 'Música não encontrada',
+      });
     }
 
-    const musicList = await Music.findAll({ where: filters });
-
-    if (musicList.length === 0) {
-      return res.status(404).json({ error: 'Nenhuma música encontrada.' });
-    }
-
-    return res.status(200).json(musicList);
-  } catch (error) {
-    return res.status(500).json({ error: 'Erro ao buscar músicas.' });
+    return res.status(200).send({
+      'status': 'success',
+      'data': music
+    });
   }
-};
+  catch (e) {
+    return res.status(500).send({
+      'error': `${e}`,
+    });
+  }
+}
 
-export {
-  createMusic,
-  getAllMusics,
-  getMusicById,
-  deleteMusic
-};
+const updateMusicPlays = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const checkMusic = await Song.findOne({
+      where: {
+        id: id,
+      }
+    });
+    if (!checkMusic) {
+      return res.status(400).send({
+        'error': 'Música não encontrada',
+      });
+    }
+
+    const update = await Song.update({
+      views: checkMusic.views + 1,
+      where: {
+        id: id,
+      }
+    });
+
+    return res.status(200).send({
+      'status': 'success',
+      'data': update
+    });
+  }
+  catch (e) {
+    return res.status(500).send({
+      'error': `${e}`,
+    });
+  }
+}
+
+
+
+export { getMusic, getMusicById, updateMusicPlays };

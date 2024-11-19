@@ -1,17 +1,11 @@
-import express from 'express';
-import {
-    createMusic,
-    getAllMusics,
-    getMusicById,
-    deleteMusic
-} from './musicFunctions.js';
-import { validate } from '../auth/authFunctions.js'; 
+import express from "express";
+import { getMusic, getMusicById, updateMusicPlays } from "./musicFunctions.js";
+import { validate } from "../auth/auth.js";
 
-const musicRoutes = express.Router();
+const router = express.Router();
 
-musicRoutes.post('/', validate, createMusic);
-musicRoutes.get('/', getAllMusics);
-musicRoutes.get('/:id', getMusicById);
-musicRoutes.delete('/:id', validate, deleteMusic);
+router.get("/", validate, getMusic);
+router.get("/:id", validate, getMusicById);
+router.patch("/:id", validate, updateMusicPlays);
 
-export default musicRoutes;
+export default router
