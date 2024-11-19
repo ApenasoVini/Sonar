@@ -1,4 +1,3 @@
-import History from '../../db/models/history.js'
 import { Op } from 'sequelize';
 import { Music } from '../../db/models/music.js';
 

@@ -1,6 +1,6 @@
 import express from "express";
 import { getMusic, getMusicById, updateMusicPlays } from "./musicFunctions.js";
-import { validate } from "../auth/auth.js";
+import { validate } from "../auth/authFunctions.js";
 
 const router = express.Router();
 
