@@ -15,6 +15,7 @@ const User = db.define('user', {
     username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
     },
     email: {
         type: DataTypes.STRING,
@@ -42,9 +43,8 @@ const User = db.define('user', {
     },
     status: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: false,
     },
 });
 
-export { User };
+export { User }

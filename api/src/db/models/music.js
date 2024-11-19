@@ -22,7 +22,6 @@ const Music = db.define('music', {
     views: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
-        allowNull: false,
     },
     duration: {
         type: DataTypes.INTEGER,
@@ -31,7 +30,15 @@ const Music = db.define('music', {
     audioUrl: {
         type: DataTypes.STRING,
         allowNull: false,
-    }
+    },
+    albumId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    authorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
 });
 
 export { Music };

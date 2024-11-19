@@ -1,11 +1,11 @@
-import DataTypes from 'sequelize'
-import db from '../db.js'
+import DataTypes from 'sequelize';
+import db from '../db.js';
 
 const Album = db.define('album', {
     id: {
         type: DataTypes.INTEGER,
+        primaryKey: true,
         autoIncrement: true,
-        primaryKey: true
     },
     name: {
         type: DataTypes.STRING,
@@ -21,13 +21,15 @@ const Album = db.define('album', {
     },
     duration: {
         type: DataTypes.INTEGER,
-        allowNull: false,
     },
     albumImage: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-})
-
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+});
 
 export { Album };

@@ -1,81 +1,63 @@
-import { parseStream } from "music-metadata";
+import { parseBuffer } from "music-metadata";
 import { uploadAudio, uploadImage } from "../../cloudinary/cloudinary.js";
 import { User } from "../../db/models/user.js";
 import { Music } from "../../db/models/music.js";
 import { Album } from "../../db/models/album.js";
-import { Readable } from "node:stream";
 import { Op } from "sequelize";
 
 const createAlbum = async (req, res) => {
     try {
-        const data = req.body;
         const user = req.user;
-        const musics = req.files["musics"];
-        let albumImage = "";
-        try {
-            albumImage = req.files["albumImage"][0];
-        }
-        catch { }
+        const data = req.body;
+        const musics = req.files['musics'] || [];
+        let albumImage = req.files['albumImage']?.[0] || '';
 
-        let duration = 0;
+        if (!data.name || !data.genre) {
+            return res.status(400).json({ error: "Nome e gênero são obrigatórios." });
+        }
 
         if (albumImage) {
             const upload = await uploadImage(albumImage);
-            if (upload !== "err") albumImage = upload;
+            if (upload !== 'err') albumImage = upload;
         }
 
-        const createAlbum = await Album.create({
+        const album = await Album.create({
             name: data.name,
             genre: data.genre,
-            albumImage: albumImage,
-            UserId: user.id
+            albumImage,
+            userId: user.id,
         });
 
-        const bufferToStream = (buffer) => {
-            const readable = new Readable();
-            readable._read = () => { };
-            readable.push(buffer);
-            readable.push(null);
-            return readable;
-        }
+        let totalDuration = 0;
+        for (let musicFile of musics) {
+            const metadata = await parseBuffer(musicFile.buffer, null, { duration: true });
+            const duration = Math.floor(metadata.format.duration || 0);
+            totalDuration += duration;
 
-        for (let music of musics) {
-            const metadata = await parseStream(bufferToStream(music.buffer), null, { duration: true });
-            const durationsInSecs = Math.floor(metadata.format.duration);
-            duration = duration + durationsInSecs;
+            const audioUrl = await uploadAudio(musicFile);
+            if (audioUrl === 'err') {
+                await album.destroy();
+                return res.status(500).send({ error: 'Erro ao carregar músicas' });
+            }
 
-            if (duration === 0) duration = 0;
-
-            const upload = await uploadAudio(music);
-            if (upload === "err") return res.status(500).send({
-                "error": "Erro ao carregar as músicas",
-            });
-            
-            const createMusic = await music.create({
-                name: music.originalname.split(".")[0],
-                duration: duration || 0,
-                audioUrl: upload,
-                AlbumId: createAlbum.dataValues.id,
-                genre: data.genre
+            await Music.create({
+                name: musicFile.originalname.split('.')[0],
+                duration,
+                audioUrl,
+                genre: data.genre,
+                albumId: album.id,
+                authorId: user.id,
             });
         }
 
-        const updateAlbumWithTotalTime = await Album.update(
-            { duration: duration },
-            { where: { id: createAlbum.dataValues.id } },
-        );
+        album.duration = totalDuration;
+        await album.save();
 
-        return res.status(201).send({
-            "status": "success",
-            "data": { createAlbum },
-        });
+        return res.status(201).send({ status: 'success', data: album });
+    } catch (e) {
+        return res.status(500).send({ error: `Erro ao criar álbum: ${e.message}` });
     }
-    catch (e) {
-        return res.status(500).send({
-            "error": `${e}`,
-        });
-    }
-}
+};
 
 const getAlbums = async (req, res) => {
     try {
@@ -83,13 +65,13 @@ const getAlbums = async (req, res) => {
 
         const albums = await Album.findAll({
             where: {
-                name: { [Op.like]: `%${name}%` },
+              name: { [Op.like]: `%${name}%` },
             },
             include: [
-                { model: User, attributes: ["username"] },
-                ...(includeSongs ? [{ model: Music }] : []),
+              { model: User, attributes: ["username"], as: 'user' }, 
+              ...(includeSongs ? [{ model: Music }] : []),
             ],
-        });
+          });               
 
         res.status(200).json({ status: "success", data: albums });
     } catch (e) {
@@ -119,7 +101,7 @@ const deleteAlbum = async (req, res) => {
         const { id } = req.params;
         const userId = req.user.id;
 
-        const album = await Album.findOne({ where: { id, UserId: userId } });
+        const album = await Album.findOne({ where: { id, userId } });
         if (!album) return res.status(404).json({ error: "Álbum não encontrado." });
 
         await album.destroy();

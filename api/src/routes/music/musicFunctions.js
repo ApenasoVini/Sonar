@@ -71,37 +71,23 @@ const getMusicById = async (req, res) => {
 
 const updateMusicPlays = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    const checkMusic = await Song.findOne({
-      where: {
-        id: id,
+      const id = parseInt(req.params.id);
+
+      const music = await Music.findByPk(id);
+      if (!music) {
+          return res.status(404).send({ error: 'Música não encontrada' });
       }
-    });
-    if (!checkMusic) {
-      return res.status(400).send({
-        'error': 'Música não encontrada',
+
+      music.views += 1;
+      await music.save();
+
+      return res.status(200).send({
+          status: 'success',
+          data: music,
       });
-    }
-
-    const update = await Song.update({
-      views: checkMusic.views + 1,
-      where: {
-        id: id,
-      }
-    });
-
-    return res.status(200).send({
-      'status': 'success',
-      'data': update
-    });
+  } catch (e) {
+      return res.status(500).send({ error: `Erro ao atualizar visualizações: ${e.message}` });
   }
-  catch (e) {
-    return res.status(500).send({
-      'error': `${e}`,
-    });
-  }
-}
-
-
+};
 
 export { getMusic, getMusicById, updateMusicPlays };
