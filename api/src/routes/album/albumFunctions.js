@@ -5,65 +5,77 @@ import { Music } from "../../db/models/music.js";
 import { Album } from "../../db/models/album.js";
 import { Readable } from "node:stream";
 import { Op } from "sequelize";
-import db from "../../db/db.js";
-
-const bufferToStream = (buffer) => {
-    const readable = new Readable();
-    readable._read = () => {};
-    readable.push(buffer);
-    readable.push(null);
-    return readable;
-};
 
 const createAlbum = async (req, res) => {
-    const transaction = await db.transaction();
     try {
-        const { name, genre } = req.body;
-        const { id: userId } = req.user;
-        const musics = req.files["musics"] || [];
-        const albumImage = req.files["albumImage"]?.[0] || "";
+        const data = req.body;
+        const user = req.user;
+        const musics = req.files["musics"];
+        let albumImage = "";
+        try {
+            albumImage = req.files["albumImage"][0];
+        }
+        catch { }
 
-        if (!name || musics.length === 0) {
-            return res.status(400).json({ error: "Preencha todos os dados obrigatórios (nome e músicas)." });
+        let duration = 0;
+
+        if (albumImage) {
+            const upload = await uploadImage(albumImage);
+            if (upload !== "err") albumImage = upload;
         }
 
-        const uploadedImage = albumImage ? await uploadImage(albumImage) : null;
+        const createAlbum = await Album.create({
+            name: data.name,
+            genre: data.genre,
+            albumImage: albumImage,
+            UserId: user.id
+        });
 
-        const newAlbum = await Album.create(
-            { name, albumImage: uploadedImage || null, UserId: userId },
-            { transaction }
-        );
+        const bufferToStream = (buffer) => {
+            const readable = new Readable();
+            readable._read = () => { };
+            readable.push(buffer);
+            readable.push(null);
+            return readable;
+        }
 
-        let totalDuration = 0;
         for (let music of musics) {
             const metadata = await parseStream(bufferToStream(music.buffer), null, { duration: true });
-            const duration = Math.floor(metadata.format.duration || 0);
-            totalDuration += duration;
+            const durationsInSecs = Math.floor(metadata.format.duration);
+            duration = duration + durationsInSecs;
 
-            const uploadedAudio = await uploadAudio(music);
-            if (uploadedAudio === "err") throw new Error("Erro ao carregar áudio.");
+            if (duration === 0) duration = 0;
 
-            await Music.create(
-                {
-                    name: music.originalname.split(".")[0],
-                    duration,
-                    link: uploadedAudio,
-                    AlbumId: newAlbum.id,
-                    genre,
-                },
-                { transaction }
-            );
+            const upload = await uploadAudio(music);
+            if (upload === "err") return res.status(500).send({
+                "error": "Erro ao carregar as músicas",
+            });
+            
+            const createMusic = await music.create({
+                name: music.originalname.split(".")[0],
+                duration: duration || 0,
+                audioUrl: upload,
+                AlbumId: createAlbum.dataValues.id,
+                genre: data.genre
+            });
         }
 
-        await newAlbum.update({ duration: totalDuration }, { transaction });
-        await transaction.commit();
+        const updateAlbumWithTotalTime = await Album.update(
+            { duration: duration },
+            { where: { id: createAlbum.dataValues.id } },
+        );
 
-        res.status(201).json({ status: "success", data: newAlbum });
-    } catch (e) {
-        await transaction.rollback();
-        res.status(500).json({ error: `Erro ao criar álbum: ${e.message}` });
+        return res.status(201).send({
+            "status": "success",
+            "data": { createAlbum },
+        });
     }
-};
+    catch (e) {
+        return res.status(500).send({
+            "error": `${e}`,
+        });
+    }
+}
 
 const getAlbums = async (req, res) => {
     try {

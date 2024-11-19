@@ -26,7 +26,7 @@ const getMusic = async (req, res) => {
       };
     }
 
-    const musics = await User.findAll({
+    const musics = await Music.findAll({
       where: conditions,
     });
 
@@ -61,8 +61,8 @@ const getMusicById = async (req, res) => {
       'status': 'success',
       'data': music
     });
-  }
-  catch (e) {
+
+  } catch (e) {
     return res.status(500).send({
       'error': `${e}`,
     });

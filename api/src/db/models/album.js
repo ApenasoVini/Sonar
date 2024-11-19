@@ -11,6 +11,14 @@ const Album = db.define('album', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    genre: {
+        type: DataTypes.ENUM(
+            'pop', 'rock', 'rap', 'jazz', 'blues',
+            'country', 'reggae', 'eletronica',
+            'musica classica', 'gospel', 'latina'
+        ),
+        allowNull: false,
+    },
     duration: {
         type: DataTypes.INTEGER,
         allowNull: false,

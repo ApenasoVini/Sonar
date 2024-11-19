@@ -5,11 +5,11 @@ import multer from 'multer';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-const router = express.Router();
+const albumRoutes = express.Router();
 
-router.post("/", validate, upload.fields([{ name: "musics" }, { name: "albumImage" }]), createAlbum);
-router.get("/", getAlbums);
-router.get("/:id", getAlbumById);
-router.delete("/:id", validate, deleteAlbum);
+albumRoutes.post("/", validate, upload.fields([{ name: "musics" }, { name: "albumImage" }]), createAlbum);
+albumRoutes.get("/", getAlbums);
+albumRoutes.get("/:id", getAlbumById);
+albumRoutes.delete("/:id", validate, deleteAlbum);
 
-export default router;
+export default albumRoutes;
