@@ -15,7 +15,7 @@ const SignIn = () => {
 
     try {
       const res = await axios.post(
-        "http://10.0.2.2:8000/user/login",
+        "http://10.0.2.2:8000/auth/",
         { "email": email, "password": password }
       );
       setToken(res.data.token);

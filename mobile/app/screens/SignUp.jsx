@@ -39,7 +39,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "http://10.0.2.2:8000/user/register",
+        "http://10.0.2.2:8000/user/",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

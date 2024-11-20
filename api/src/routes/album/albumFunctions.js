@@ -5,118 +5,134 @@ import { Music } from "../../db/models/music.js";
 import { Album } from "../../db/models/album.js";
 import { Op } from "sequelize";
 
+// Função para criar um álbum
 const createAlbum = async (req, res) => {
     try {
         const user = req.user;
-        const data = req.body;
+        const { name, genre } = req.body;
         const musics = req.files['musics'] || [];
         let albumImage = req.files['albumImage']?.[0] || '';
 
-        if (!data.name || !data.genre) {
+        // Validação dos campos obrigatórios
+        if (!name || !genre) {
             return res.status(400).json({ error: "Nome e gênero são obrigatórios." });
         }
 
+        // Upload da imagem do álbum
         if (albumImage) {
             const upload = await uploadImage(albumImage);
-            if (upload !== 'err') albumImage = upload;
+            if (upload === 'err') {
+                return res.status(500).json({ error: "Erro ao carregar imagem do álbum." });
+            }
+            albumImage = upload;
         }
 
+        // Criação do álbum
         const album = await Album.create({
-            name: data.name,
-            genre: data.genre,
+            name,
+            genre,
             albumImage,
             userId: user.id,
         });
 
         let totalDuration = 0;
-        for (let musicFile of musics) {
-            const metadata = await parseBuffer(musicFile.buffer, null, { duration: true });
-            const duration = Math.floor(metadata.format.duration || 0);
-            totalDuration += duration;
 
+        // Processamento e upload das músicas
+        for (let musicFile of musics) {
+            const { duration } = await parseBuffer(musicFile.buffer, null, { duration: true }) || {};
             const audioUrl = await uploadAudio(musicFile);
+
             if (audioUrl === 'err') {
                 await album.destroy();
-                return res.status(500).send({ error: 'Erro ao carregar músicas' });
+                return res.status(500).json({ error: "Erro ao carregar músicas." });
             }
+
+            totalDuration += Math.floor(duration || 0);
 
             await Music.create({
                 name: musicFile.originalname.split('.')[0],
-                duration,
+                duration: Math.floor(duration || 0),
                 audioUrl,
-                genre: data.genre,
-                albumId: album.id,
+                genre,
+                albumid: album.id,
                 authorId: user.id,
             });
         }
 
+        // Atualizar a duração total do álbum
         album.duration = totalDuration;
         await album.save();
 
-        return res.status(201).send({ status: 'success', data: album });
-    } catch (e) {
-        return res.status(500).send({ error: `Erro ao criar álbum: ${e.message}` });
+        return res.status(201).json({ status: "success", data: album });
+    } catch (error) {
+        console.error("Erro ao criar álbum:", error);
+        return res.status(500).json({ error: `Erro ao criar álbum: ${error.message}` });
     }
 };
 
+// Função para listar todos os álbuns com filtros opcionais
 const getAlbums = async (req, res) => {
     try {
-        const { name = "" } = req.query; 
-        const conditions = {};
+        const { name = "" } = req.query;
 
-        if (name) {
-            conditions.name = {
-                [Op.like]: `%${name}%`,
-            };
-        }
+        // Condições de filtro
+        const conditions = name
+            ? { name: { [Op.like]: `%${name}%` } }
+            : {};
 
         const albums = await Album.findAll({
             where: conditions,
-            // include: [
-            //     { model: Music, as: "musics" },
-            //     { model: User, attributes: ["username"], as: "users" },
-            // ],
+            include: [
+                { model: Music }
+                // { model: User, attributes: ["username"] },
+            ],
         });
 
-        return res.status(200).send({
-            status: "success",
-            data: albums,
-        });
-    } catch (e) {
-        return res.status(500).json({ error: `Erro ao buscar álbuns: ${e.message}` });
+        return res.status(200).json({ status: "success", data: albums });
+    } catch (error) {
+        console.error("Erro ao buscar álbuns:", error);
+        return res.status(500).json({ error: `Erro ao buscar álbuns: ${error.message}` });
     }
 };
-
 
 const getAlbumById = async (req, res) => {
     try {
         const album = await Album.findByPk(req.params.id, {
-            // include: [
-            //     { model: Music, as: "musics" },
-            //     { model: User, attributes: ["username"], as: "users" },
-            // ],
+            include: [
+                { model: Music }
+                // { model: User, attributes: ["username"] }
+            ],
         });
 
-        if (!album) return res.status(404).json({ error: "Álbum não encontrado." });
+        if (!album) {
+            return res.status(404).json({ error: "Álbum não encontrado." });
+        }
 
-        res.status(200).json({ status: "success", data: album });
-    } catch (e) {
-        res.status(500).json({ error: `Erro ao buscar álbum: ${e.message}` });
+        return res.status(200).json({ status: "success", data: album });
+    } catch (error) {
+        console.error("Erro ao buscar álbum:", error);
+        return res.status(500).json({ error: `Erro ao buscar álbum: ${error.message}` });
     }
 };
 
+// Função para excluir um álbum
 const deleteAlbum = async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.user.id;
 
+        // Verificar se o álbum pertence ao usuário
         const album = await Album.findOne({ where: { id, userId } });
-        if (!album) return res.status(404).json({ error: "Álbum não encontrado." });
+
+        if (!album) {
+            return res.status(404).json({ error: "Álbum não encontrado." });
+        }
 
         await album.destroy();
-        res.status(200).json({ status: "success", message: "Álbum excluído com sucesso." });
-    } catch (e) {
-        res.status(500).json({ error: `Erro ao excluir álbum: ${e.message}` });
+        return res.status(200).json({ status: "success", message: "Álbum excluído com sucesso." });
+    } catch (error) {
+        console.error("Erro ao excluir álbum:", error);
+        return res.status(500).json({ error: `Erro ao excluir álbum: ${error.message}` });
     }
 };
 
