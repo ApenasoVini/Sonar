@@ -5,6 +5,7 @@ import userRoutes from './src/routes/user/userRoutes.js';
 import authRoutes from './src/routes/auth/authRoutes.js';
 import musicRoutes from './src/routes/music/musicRoutes.js';
 import albumRoutes from './src/routes/album/albumRoutes.js';
+import './src/db/models/relationships.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 dotenv.config();

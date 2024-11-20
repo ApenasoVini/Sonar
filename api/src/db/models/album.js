@@ -27,7 +27,7 @@ const Album = db.define('albums', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    userId: {
+    userid: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },

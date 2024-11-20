@@ -4,14 +4,14 @@ import { Music } from './music.js';
 import { Album } from './album.js';
 // import { History } from './history.js';
 
-Album.hasMany(Music, { onDelete: 'CASCADE' });
-Music.belongsTo(Album);
+Album.hasMany(Music, { onDelete: 'CASCADE', foreignKey: 'albumid' });
+Music.belongsTo(Album, { foreignKey: 'albumid' });
 
-User.hasMany(Album, { onDelete: 'CASCADE' });
-Album.belongsTo(User);
+User.hasMany(Album, { onDelete: 'CASCADE', foreignKey: 'userid' });
+Album.belongsTo(User, { foreignKey: 'userid' });
 
-User.hasMany(Music, { onDelete: 'CASCADE' });
-Music.belongsTo(User);
+User.hasMany(Music, { onDelete: 'CASCADE', foreignKey: 'userid' });
+Music.belongsTo(User, { foreignKey: 'userid' });
 
 // Playlist.belongsToMany(Music, {
 //     through: 'Playlist_Music',
@@ -28,4 +28,3 @@ Music.belongsTo(User);
 //     onDelete: 'CASCADE',
 //     as: 'playlists',
 // });
-

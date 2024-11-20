@@ -35,7 +35,7 @@ const Music = db.define('musics', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    authorId: {
+    userid: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },

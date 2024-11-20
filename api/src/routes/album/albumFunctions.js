@@ -5,7 +5,6 @@ import { Music } from "../../db/models/music.js";
 import { Album } from "../../db/models/album.js";
 import { Op } from "sequelize";
 
-// Função para criar um álbum
 const createAlbum = async (req, res) => {
     try {
         const user = req.user;
@@ -13,12 +12,10 @@ const createAlbum = async (req, res) => {
         const musics = req.files['musics'] || [];
         let albumImage = req.files['albumImage']?.[0] || '';
 
-        // Validação dos campos obrigatórios
         if (!name || !genre) {
             return res.status(400).json({ error: "Nome e gênero são obrigatórios." });
         }
 
-        // Upload da imagem do álbum
         if (albumImage) {
             const upload = await uploadImage(albumImage);
             if (upload === 'err') {
@@ -27,17 +24,15 @@ const createAlbum = async (req, res) => {
             albumImage = upload;
         }
 
-        // Criação do álbum
         const album = await Album.create({
             name,
             genre,
             albumImage,
-            userId: user.id,
+            userid: user.id,
         });
 
         let totalDuration = 0;
 
-        // Processamento e upload das músicas
         for (let musicFile of musics) {
             const { duration } = await parseBuffer(musicFile.buffer, null, { duration: true }) || {};
             const audioUrl = await uploadAudio(musicFile);
@@ -55,11 +50,10 @@ const createAlbum = async (req, res) => {
                 audioUrl,
                 genre,
                 albumid: album.id,
-                authorId: user.id,
+                userid: user.id,
             });
         }
 
-        // Atualizar a duração total do álbum
         album.duration = totalDuration;
         await album.save();
 
@@ -70,12 +64,10 @@ const createAlbum = async (req, res) => {
     }
 };
 
-// Função para listar todos os álbuns com filtros opcionais
 const getAlbums = async (req, res) => {
     try {
         const { name = "" } = req.query;
 
-        // Condições de filtro
         const conditions = name
             ? { name: { [Op.like]: `%${name}%` } }
             : {};
@@ -83,8 +75,8 @@ const getAlbums = async (req, res) => {
         const albums = await Album.findAll({
             where: conditions,
             include: [
-                { model: Music }
-                // { model: User, attributes: ["username"] },
+                { model: Music },
+                { model: User, attributes: ["username"] },
             ],
         });
 
@@ -99,8 +91,8 @@ const getAlbumById = async (req, res) => {
     try {
         const album = await Album.findByPk(req.params.id, {
             include: [
-                { model: Music }
-                // { model: User, attributes: ["username"] }
+                { model: Music },
+                { model: User, attributes: ["username"] }
             ],
         });
 
@@ -115,14 +107,12 @@ const getAlbumById = async (req, res) => {
     }
 };
 
-// Função para excluir um álbum
 const deleteAlbum = async (req, res) => {
     try {
         const { id } = req.params;
-        const userId = req.user.id;
+        const userid = req.user.id;
 
-        // Verificar se o álbum pertence ao usuário
-        const album = await Album.findOne({ where: { id, userId } });
+        const album = await Album.findOne({ where: { id, userid } });
 
         if (!album) {
             return res.status(404).json({ error: "Álbum não encontrado." });
