@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../db.js';
 
-const Playlist = db.define('playlist', {
+const Playlist = db.define('playlists', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

@@ -61,31 +61,40 @@ const createAlbum = async (req, res) => {
 
 const getAlbums = async (req, res) => {
     try {
-        const { name = "", includeSongs = false } = req.query;
+        const { name = "" } = req.query; 
+        const conditions = {};
+
+        if (name) {
+            conditions.name = {
+                [Op.like]: `%${name}%`,
+            };
+        }
 
         const albums = await Album.findAll({
-            where: {
-              name: { [Op.like]: `%${name}%` },
-            },
-            include: [
-              { model: User, attributes: ["username"], as: 'user' }, 
-              ...(includeSongs ? [{ model: Music }] : []),
-            ],
-          });               
+            where: conditions,
+            // include: [
+            //     { model: Music, as: "musics" },
+            //     { model: User, attributes: ["username"], as: "users" },
+            // ],
+        });
 
-        res.status(200).json({ status: "success", data: albums });
+        return res.status(200).send({
+            status: "success",
+            data: albums,
+        });
     } catch (e) {
-        res.status(500).json({ error: `Erro ao buscar álbuns: ${e.message}` });
+        return res.status(500).json({ error: `Erro ao buscar álbuns: ${e.message}` });
     }
 };
+
 
 const getAlbumById = async (req, res) => {
     try {
         const album = await Album.findByPk(req.params.id, {
-            include: [
-                { model: Music },
-                { model: User, attributes: ["username"] },
-            ],
+            // include: [
+            //     { model: Music, as: "musics" },
+            //     { model: User, attributes: ["username"], as: "users" },
+            // ],
         });
 
         if (!album) return res.status(404).json({ error: "Álbum não encontrado." });

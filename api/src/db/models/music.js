@@ -1,7 +1,7 @@
 import DataTypes from 'sequelize';
 import db from '../db.js';
 
-const Music = db.define('music', {
+const Music = db.define('musics', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

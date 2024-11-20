@@ -1,7 +1,7 @@
 import DataTypes from 'sequelize';
 import db from '../db.js';
 
-const Album = db.define('album', {
+const Album = db.define('albums', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -14,8 +14,9 @@ const Album = db.define('album', {
     genre: {
         type: DataTypes.ENUM(
             'pop', 'rock', 'rap', 'jazz', 'blues',
-            'country', 'reggae', 'eletronica',
-            'musica classica', 'gospel', 'latina'
+            'funk', 'trap', 'drill', 'country',
+            'reggae', 'eletronica', 'musica classica',
+            'gospel', 'latina'
         ),
         allowNull: false,
     },
