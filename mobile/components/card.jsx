@@ -7,7 +7,8 @@ const Card = (props) => {
       <ImageBackground style={styles.img} source={{ uri: props.bg }}>
         <Text style={styles.title}>{props.title}</Text>
         <Text style={styles.title}>{props.genre}</Text>
-        <Text style={styles.title}>{props.username}</Text>
+        <Text style={styles.title}>{props.author}</Text>
+        {props.musics}
       </ImageBackground>
     </TouchableOpacity>
   );

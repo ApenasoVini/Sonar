@@ -28,6 +28,7 @@ const Home = () => {
         //     (item) => item.userId !== user.id && item.userType === 'artist'
         //   );
         setAlbuns(response.data.data);
+        console.log(response.data.data[0]?.music.name);
         // }
       } catch (error) {
         console.error('Erro ao buscar álbuns:', error);
@@ -50,7 +51,8 @@ const Home = () => {
               title={item.name}
               bg={item.albumImage}
               genre={item.genre}
-              author={item.username}
+              author={item.user.username}
+              musics={item.musics.name}
             />
           </View>
         )}
