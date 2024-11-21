@@ -1,17 +1,20 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 
-const Card = ({ title }) => {
+const Card = (props) => {
   return (
     <TouchableOpacity onPress={() => alert('Oi')} style={styles.card}>
-      <Text style={styles.title}>{title}</Text>
+      <ImageBackground style={styles.img} source={{ uri: props.bg }}>
+        <Text style={styles.title}>{props.title}</Text>
+        <Text style={styles.title}>{props.genre}</Text>
+        <Text style={styles.title}>{props.username}</Text>
+      </ImageBackground>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FF6A00',
     padding: 20,
     marginVertical: 10,
     width: 250,
@@ -22,6 +25,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
+  },
+  img: {
+    flex: 1
   },
   title: {
     color: '#fff',
