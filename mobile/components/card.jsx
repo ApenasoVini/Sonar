@@ -1,15 +1,23 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
+import { router } from 'expo-router';
 
 const Card = (props) => {
   return (
-    <TouchableOpacity onPress={() => alert('Oi')} style={styles.card}>
-      <ImageBackground style={styles.img} source={{ uri: props.bg }}>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.title}>{props.genre}</Text>
-        <Text style={styles.title}>{props.author}</Text>
-        {props.musics}
-      </ImageBackground>
+    <TouchableOpacity onPress={() => router.push({ pathname: '/screens/Album/[id]', params: { id: props.id } })} style={styles.card}>
+      <Image style={styles.img} source={{ uri: props.bg }}>
+      </Image>
+      <View style={styles.info}>
+        <View>
+          <Text style={styles.txt1}>{props.title}</Text>
+        </View>
+        <View style={styles.author}>
+          <Text style={styles.icon1}>𝅘𝅥𝅮</Text>
+          <Text style={styles.txt2}>{props.genre}</Text>
+          <Text style={styles.icon2}>•</Text>
+          <Text style={styles.txt3}>{props.author}</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -17,23 +25,56 @@ const Card = (props) => {
 const styles = StyleSheet.create({
   card: {
     padding: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: 10,
-    width: 250,
-    height: 250,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
   },
   img: {
-    flex: 1
+    width: 100,
+    height: 100,
+    marginRight: 15,
   },
-  title: {
-    color: '#fff',
-    fontSize: 18,
+  info: {
+    flexDirection: 'column',
+    display: 'flex'
+  },
+  txt1: {
+    color: '#FFF',
+    fontSize: 24,
+    fontWeight: '800',
+  },
+  author: {
+    width: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    display: 'flex',
+    marginVertical: 8
+  },
+  icon1: {
+    color: '#FFF',
+    fontSize: 24,
+    marginHorizontal: 5
+  },
+  txt2: {
+    color: '#FFF',
     fontWeight: '600',
+    marginRight: 15,
+    fontSize: 24
+  },
+  icon2: {
+    color: '#FFF',
+    fontSize: 30,
+    marginHorizontal: 5
+  },
+  txt3: {
+    color: '#FFF',
+    fontSize: 24,
+    backgroundColor: '#FF6A00',
+    fontWeight: '600',
+    paddingVertical: 2,
+    paddingHorizontal: 7,
+    borderRadius: 15
   },
 });
 
