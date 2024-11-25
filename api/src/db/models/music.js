@@ -14,8 +14,9 @@ const Music = db.define('musics', {
     genre: {
         type: DataTypes.ENUM(
             'pop', 'rock', 'rap', 'jazz', 'blues',
-            'country', 'reggae', 'eletronica',
-            'musica classica', 'gospel', 'latina'
+            'funk', 'trap', 'drill', 'country',
+            'reggae', 'eletronica', 'musica classica',
+            'gospel', 'latina'
         ),
         allowNull: false,
     },

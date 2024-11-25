@@ -14,10 +14,10 @@ export default function SignUp() {
       </View>
       <Text style={styles.title}>Bem vindo a Sonar!</Text>
       <Text style={styles.desc}>O melhor App de músicas</Text>
-      <Pressable onPress={() => router.push("/screens/SignUp")} style={styles.press1}>
+      <Pressable onPress={() => router.push('/screens/SignUp')} style={styles.press1}>
         <Text style={styles.text1}>Sign up</Text>
       </Pressable>
-      <Pressable onPress={() => router.push("/screens/SignIn")} style={styles.press2}>
+      <Pressable onPress={() => router.push('/screens/SignIn')} style={styles.press2}>
         <Text style={styles.text2}>Sign in</Text>
       </Pressable>
     </LinearGradient>
