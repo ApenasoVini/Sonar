@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import Music from '../../../components/music';
 import axios from 'axios';
 
 export default function () {
@@ -44,7 +45,14 @@ export default function () {
                 data={album.musics}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Text style={styles.song}>{item.name}</Text>
+                    <View>
+                        <Music 
+                            name={item.name}
+                            id={item.id}
+                            views={item.views}
+                            bg={album.albumImage}
+                        />
+                    </View>
                 )}
             />
         </View>
