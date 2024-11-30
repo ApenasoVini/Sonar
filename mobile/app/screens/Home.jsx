@@ -29,7 +29,7 @@ const Home = () => {
         renderItem={({ item }) => (
           <View style={styles.content}>
             <Card
-              title={item.name}
+              name={item.name}
               bg={item.albumImage}
               genre={item.genre}
               author={item.user.username}

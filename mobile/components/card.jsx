@@ -9,7 +9,7 @@ const Card = (props) => {
       </Image>
       <View style={styles.info}>
         <View>
-          <Text style={styles.txt1}>{props.title}</Text>
+          <Text style={styles.txt1}>{props.name}</Text>
         </View>
         <View style={styles.author}>
           <Text style={styles.icon1}>𝅘𝅥𝅮</Text>

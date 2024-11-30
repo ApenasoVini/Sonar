@@ -18,7 +18,7 @@ const Header = () => {
         />
       </View>
       <View style={styles.iconContainer}>
-        <Pressable onPress={() => router.push("/screens/Album/[id]")}>
+        <Pressable onPress={() => router.push("/screens/User/[id]")}>
           <Image source={require('../assets/profile.png')} style={styles.icon} />
         </Pressable>
       </View>

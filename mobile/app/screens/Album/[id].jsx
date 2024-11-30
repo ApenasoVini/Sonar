@@ -48,6 +48,7 @@ export default function () {
                     <View>
                         <Music 
                             name={item.name}
+                            author={album.user.username}
                             id={item.id}
                             views={item.views}
                             bg={album.albumImage}

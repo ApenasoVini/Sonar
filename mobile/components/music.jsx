@@ -4,12 +4,12 @@ import { router } from 'expo-router';
 
 const Music = (props) => {
   return (
-    <TouchableOpacity onPress={() => router.push({ pathname: '/screens/Album/[id]', params: { id: props.id } })} style={styles.card}>
+    <TouchableOpacity onPress={() => router.push({ pathname: '/screens/User/[id]', params: { id: props.id } })} style={styles.card}>
       <Image style={styles.img} source={{ uri: props.bg }}>
       </Image>
       <View style={styles.info}>
         <View>
-          <Text style={styles.txt1}>{props.title}</Text>
+          <Text style={styles.txt1}>{props.name}</Text>
         </View>
         <View style={styles.author}>
           <Text style={styles.icon1}>𝅘𝅥𝅮</Text>
