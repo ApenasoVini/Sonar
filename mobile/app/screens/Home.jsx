@@ -20,12 +20,14 @@ const Home = () => {
           ...item,
           type: 'album',
         }));
-        const users = usersResponse.data.data.map((item) => ({
-          ...item,
-          type: 'artist',
-        }));
+        const artists = usersResponse.data.data
+          .filter((item) => item.userType === 'artist') 
+          .map((item) => ({
+            ...item,
+            type: 'user',
+          }));
 
-        setData([...albuns, ...users]);
+        setData([...albuns, ...artists]); 
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       }

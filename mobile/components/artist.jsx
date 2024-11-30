@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 
 const Artist = (props) => {
     return (
-        <TouchableOpacity onPress={() => router.push({ pathname: '/screens/User/[id]', params: { id: props.id } })} style={styles.artist}>
+        <TouchableOpacity onPress={() => router.push(`/screens/User/${props.id}`)} style={styles.artist}>
             <Image style={styles.img} source={{ uri: props.bg }}>
             </Image>
             <View>
