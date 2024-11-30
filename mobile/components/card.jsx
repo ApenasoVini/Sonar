@@ -12,10 +12,14 @@ const Card = (props) => {
           <Text style={styles.txt1}>{props.name}</Text>
         </View>
         <View style={styles.author}>
-          <Text style={styles.icon1}>𝅘𝅥𝅮</Text>
-          <Text style={styles.txt2}>{props.genre}</Text>
-          <Text style={styles.icon2}>•</Text>
-          <Text style={styles.txt3}>{props.author}</Text>
+          <View style={styles.line}>
+            <Text style={styles.icon1}>𝅘𝅥𝅮</Text>
+            <Text style={styles.txt2}>{props.genre}</Text>
+          </View>
+          <View style={styles.line}>
+            <Text style={styles.icon2}>•</Text>
+            <Text style={styles.txt3}>{props.author}</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -35,6 +39,10 @@ const styles = StyleSheet.create({
     height: 100,
     marginRight: 15,
   },
+  line: {
+    flexDirection: 'row',
+    display: 'flex',
+  },
   info: {
     flexDirection: 'column',
     display: 'flex'
@@ -46,10 +54,8 @@ const styles = StyleSheet.create({
   },
   author: {
     width: 'auto',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     display: 'flex',
-    marginVertical: 8
   },
   icon1: {
     color: '#FFF',

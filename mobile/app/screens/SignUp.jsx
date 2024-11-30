@@ -13,8 +13,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [userId, setUserId] = useState(null); 
-  
+  const [userId, setUserId] = useState(null);
+
   const handleSignUp = async () => {
     if (!email || !name || !password || !username || !passwordConfirm) return;
 
@@ -43,7 +43,7 @@ const SignUp = () => {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      setUserId(response.data.id); 
+      setUserId(response.data.id);
       Alert.alert("Usuário criado com sucesso.");
       router.push("/screens/Payments");
     } catch (e) {
@@ -80,7 +80,7 @@ const SignUp = () => {
         </Pressable>
       ) : (
         <Pressable onPress={pickImage} style={styles.buttonImg}>
-          <Text>Adicionar Foto</Text>
+          <Image source={require('../../assets/profile.png')} />
         </Pressable>
       )}
 

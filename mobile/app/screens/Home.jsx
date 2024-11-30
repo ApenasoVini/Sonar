@@ -22,7 +22,7 @@ const Home = () => {
         }));
         const users = usersResponse.data.data.map((item) => ({
           ...item,
-          type: 'user',
+          type: 'artist',
         }));
 
         setData([...albuns, ...users]);
