@@ -31,13 +31,11 @@ export default function () {
     }
 
     return (
-        <View style={styles.container}>
-            <LinearGradient
-                colors={['#000000', '#232323']}
-                style={styles.gradient}
-            >
-                <Image source={{ uri: album.albumImage }} style={styles.albumImage} />
-            </LinearGradient>
+        <LinearGradient
+            colors={['#000000', '#232323']}
+            style={styles.container}
+        >
+            <Image source={{ uri: album.albumImage }} style={styles.albumImage} />
             <Text style={styles.title}>{album.name}</Text>
             <Text style={styles.genre}>Gênero: {album.genre}</Text>
             <Text style={styles.author}>Criado por: {album.user.username}</Text>
@@ -46,7 +44,7 @@ export default function () {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <View>
-                        <Music 
+                        <Music
                             name={item.name}
                             author={album.user.username}
                             id={item.id}
@@ -56,7 +54,7 @@ export default function () {
                     </View>
                 )}
             />
-        </View>
+        </LinearGradient>
     );
 }
 
@@ -64,12 +62,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        alignItems: 'center',
         backgroundColor: '#1A1A1A',
-    },
-    gradient: {
-        marginTop: 30,
-        display: 'flex',
-        alignItems: 'center'
     },
     albumImage: {
         width: 300,
