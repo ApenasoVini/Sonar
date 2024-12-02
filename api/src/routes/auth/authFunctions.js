@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../../db/models/user.js';
 import bcrypt from 'bcrypt';
+import { User } from '../../db/models/user.js';
 
 const createToken = (user) => {
     return jwt.sign(
@@ -63,13 +63,8 @@ const validate = async (req, res, next) => {
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const method = req.route.stack[1].method;
-
-        if (
-            (['deleteUser', 'updateUser'].includes(method) && user.id !== parseInt(req.params.id)) ||
-            (['createGenre', 'deleteGenre'].includes(method) && user.userType !== 'admin') ||
-            (['createAlbum', 'deleteAlbum'].includes(method) && user.userType === 'artist')
-        ) {
+        const userIdParam = parseInt(req.params.id);
+        if (['PATCH', 'DELETE'].includes(req.method) && user.id !== userIdParam) {
             return res.status(403).json({ error: 'Forbidden' });
         }
 
@@ -81,4 +76,4 @@ const validate = async (req, res, next) => {
     }
 };
 
-export { login, validate };
+export { login, validate, createToken };

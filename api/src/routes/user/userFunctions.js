@@ -2,6 +2,7 @@ import { User } from '../../db/models/user.js';
 import bcrypt from 'bcrypt';
 import { uploadImage } from '../../cloudinary/cloudinary.js';
 import { Op } from 'sequelize';
+import { createToken } from '../auth/authFunctions.js';
 
 const createUser = async (req, res) => {
   try {
@@ -31,9 +32,13 @@ const createUser = async (req, res) => {
     data.password = await bcrypt.hash(data.password, salt);
 
     const newUser = await User.create(data);
+
+    const token = createToken(newUser);
+
     return res.status(201).send({
       status: 'success',
-      data: newUser,
+      token,
+      newUser,
     });
   } catch (e) {
     console.error(e);
@@ -49,61 +54,26 @@ const getUserById = async (req, res) => {
     const id = parseInt(req.params.id);
 
     const user = await User.findOne({
-      where: {
-        id: id
-      },
-      attributes: {
-        exclude: ['password']
-      },
+      where: { id },
+      attributes: { exclude: ['password'] },
     });
+
     if (!user) {
-      return res.status(400).send({
-        'error': 'Usuário não existente',
-      });
+      return res.status(400).send({ error: 'Usuário não existente' });
     }
 
-    return res.status(200).send({
-      'status': 'success',
-      'data': user
-    });
-  }
-  catch (e) {
-    return res.status(500).send({
-      'error': `${e}`,
-    });
-  }
-}
-
-const deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userExists = await User.findOne({ where: { id: id } });
-    if (!userExists) {
-      return res.status(400).send({
-        error: 'Usuário não existente',
-      });
-    }
-
-    await User.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      'status': 'success',
-    });
+    return res.status(200).send({ status: 'success', data: user });
   } catch (e) {
-    return res.status(500).send({
-      error: `${e}`,
-    });
+    return res.status(500).send({ error: `${e}` });
   }
 };
 
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, username, description, dateBirth, password } = req.body
-    const userExists = await User.findOne({ where: { id: id } });
+    const { name, username, description, password } = req.body;
+
+    const userExists = await User.findOne({ where: { id } });
     if (!userExists) {
       return res.status(400).send({ error: 'Usuário não existente' });
     }
@@ -112,8 +82,7 @@ const updateUser = async (req, res) => {
 
     if (password) {
       const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(password, salt);
-      updatedData.password = hashedPassword;
+      updatedData.password = await bcrypt.hash(password, salt);
     }
 
     if (req.files) {
@@ -129,14 +98,10 @@ const updateUser = async (req, res) => {
     if (name) updatedData.name = name;
     if (username) updatedData.username = username;
     if (description) updatedData.description = description;
-    if (dateBirth) updatedData.dateBirth = dateBirth;
 
-    await User.update(updatedData, { where: { id: id } });
+    await User.update(updatedData, { where: { id } });
 
-    return res.status(200).json({
-      status: 'success',
-      data: updatedData,
-    });
+    return res.status(200).json({ status: 'success', data: updatedData });
   } catch (e) {
     console.error('Erro ao atualizar usuário:', e);
     return res.status(500).send({
@@ -146,32 +111,36 @@ const updateUser = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const userExists = await User.findOne({ where: { id } });
+    if (!userExists) {
+      return res.status(400).send({ error: 'Usuário não existente' });
+    }
+
+    await User.destroy({ where: { id } });
+    return res.status(200).json({ status: 'success' });
+  } catch (e) {
+    return res.status(500).send({ error: `${e}` });
+  }
+};
+
 const getAllUsers = async (req, res) => {
   try {
-    let { username } = req.query;
-    const conditions = {};
+    const { username } = req.query;
 
-    if (!username || username === '') {
-      username = '';
-    }
-
-    if (username) {
-      conditions.username = {
-        [Op.like]: `%${username}%`,
-      };
-    }
+    const conditions = username
+      ? { username: { [Op.like]: `%${username}%` } }
+      : {};
 
     const users = await User.findAll({
       where: conditions,
-      attributes: {
-        exclude: ['password']
-      },
+      attributes: { exclude: ['password'] },
     });
 
-    return res.status(200).send({
-      'status': 'success',
-      'data': users,
-    });
+    return res.status(200).send({ status: 'success', data: users });
   } catch (error) {
     return res.status(500).json({ message: 'Erro ao buscar usuários.', error });
   }

@@ -22,10 +22,6 @@ const User = db.define('users', {
         allowNull: false,
         unique: true,
     },
-    dateBirth: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-    },
     description: {
         type: DataTypes.STRING(300),
     },
@@ -40,10 +36,6 @@ const User = db.define('users', {
         type: DataTypes.ENUM('user', 'artist', 'admin'),
         defaultValue: 'user',
         allowNull: false,
-    },
-    status: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
     },
 });
 

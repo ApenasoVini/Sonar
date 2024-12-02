@@ -16,6 +16,7 @@ export default function () {
     try {
       const res = await axios.get(`http://10.0.2.2:8000/user/${user.id}`);
       setData(res.data.data);
+      console.log(data)
     } catch (e) {
       console.log(e);
     }
@@ -46,7 +47,6 @@ export default function () {
       formData.append("name", data.name);
       formData.append("username", data.username);
       formData.append("description", data.description);
-      formData.append("dateBirth", data.dateBirth);
 
       if (newPassword) {
         formData.append("password", newPassword);
@@ -143,13 +143,6 @@ export default function () {
               />
               <TextInput
                 style={styles.input}
-                value={data.dateBirth}
-                onChangeText={(text) => setData({ ...data, dateBirth: text })}
-                placeholder="Data de Nascimento"
-                placeholderTextColor="#aaa"
-              />
-              <TextInput
-                style={styles.input}
                 placeholder="Nova Senha"
                 secureTextEntry
                 value={newPassword}
@@ -171,7 +164,6 @@ export default function () {
               <Text style={styles.info}>{data.email}</Text>
               <Text style={styles.info}>{data.name}</Text>
               <Text style={styles.info}>{data.description}</Text>
-              <Text style={styles.info}>{data.dateBirth}</Text>
             </>
           )}
         </View>

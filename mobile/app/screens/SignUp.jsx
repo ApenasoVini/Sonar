@@ -8,7 +8,6 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [dateBirth, setDateBirth] = useState("");
   const [description, setDescription] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -28,7 +27,6 @@ const SignUp = () => {
     formData.append('email', email);
     formData.append('password', password);
     formData.append('description', description);
-    formData.append('dateBirth', dateBirth);
     if (profileImage) {
       formData.append('profileImage', {
         uri: profileImage.uri,
@@ -70,7 +68,6 @@ const SignUp = () => {
       <TextInput value={name} onChangeText={setName} placeholder="Nome completo" style={styles.input} placeholderTextColor="#ccc" />
       <TextInput value={username} onChangeText={setUsername} placeholder="Nome de usuário" style={styles.input} placeholderTextColor="#ccc" />
       <TextInput value={email} onChangeText={setEmail} placeholder="Email" style={styles.input} placeholderTextColor="#ccc" />
-      <TextInput value={dateBirth} onChangeText={setDateBirth} placeholder="Data de Nascimento" style={styles.input} placeholderTextColor="#ccc" />
       <TextInput value={description} onChangeText={setDescription} placeholder="Descrição" style={styles.input} placeholderTextColor="#ccc" />
       <TextInput value={password} onChangeText={setPassword} placeholder="Senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
       <TextInput value={passwordConfirm} onChangeText={setPasswordConfirm} placeholder="Confirme sua senha" secureTextEntry style={styles.input} placeholderTextColor="#ccc" />
