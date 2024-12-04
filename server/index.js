@@ -28,15 +28,15 @@ app.get('/', (req, res) => {
     return res.status(200).json({ "msg": "This is the Sonar API" });
 });
 
-// try {
-//     db.sync()
-//         .then(() => {
-//             console.log("All models were synchronized successfully.");
-//         })
-//         .catch((error) => {
-//             console.error("Error synchronizing the models:", error);
-//         });
-//     app.listen(process.env.PORT || 8000, () => console.log(`Server running on port: ${process.env.PORT || 8000}\n`));
-// } catch (err) {
-//     console.error(`\nError in running server: ${err}\n`);
-// }
+try {
+    db.sync()
+        .then(() => {
+            console.log("All models were synchronized successfully.");
+        })
+        .catch((error) => {
+            console.error("Error synchronizing the models:", error);
+        });
+    app.listen(process.env.PORT || 8000, () => console.log(`Server running on port: ${process.env.PORT || 8000}\n`));
+} catch (err) {
+    console.error(`\nError in running server: ${err}\n`);
+}
