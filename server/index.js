@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 //         .catch((error) => {
 //             console.error("Error synchronizing the models:", error);
 //         });
-//     app.listen(process.env.PORT || 8000, () => console.log(`Server running on port: ${process.env.PORT || 8000}\n`));
+    app.listen(process.env.PORT || 8000, () => console.log(`Server running on port: ${process.env.PORT || 8000}\n`));
 // } catch (err) {
 //     console.error(`\nError in running server: ${err}\n`);
 // }
