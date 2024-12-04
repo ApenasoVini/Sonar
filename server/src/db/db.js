@@ -14,9 +14,7 @@ const db = new Sequelize({
     port: PORT,
     ssl: true,
     logging: false,
-    dialectOptions: {
-        connectTimeout: 60000,
-    },
+    connectionTimeoutMillis: 60000,
 });
 
 export default db;
