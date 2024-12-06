@@ -15,7 +15,16 @@ const Playlist = db.define('playlists', {
     playlistImage: {
         type: DataTypes.STRING,
     },
-    isOwner: {
+    userid: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    isPublic: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
+    isFavorited: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,

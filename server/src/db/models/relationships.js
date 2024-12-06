@@ -1,6 +1,6 @@
 import { User } from './user.js';
 import { Music } from './music.js';
-// import { Playlist } from './playlist.js';
+import { Playlist } from './playlist.js';
 import { Album } from './album.js';
 // import { History } from './history.js';
 
@@ -13,18 +13,5 @@ Album.belongsTo(User, { foreignKey: 'userid' });
 User.hasMany(Music, { onDelete: 'CASCADE', foreignKey: 'userid' });
 Music.belongsTo(User, { foreignKey: 'userid' });
 
-// Playlist.belongsToMany(Music, {
-//     through: 'Playlist_Music',
-//     foreignKey: 'playlistId',
-//     otherKey: 'musicId',
-//     onDelete: 'CASCADE',
-//     as: 'musics',
-// });
-
-// Music.belongsToMany(Playlist, {
-//     through: 'Playlist_Music',
-//     foreignKey: 'musicId',
-//     otherKey: 'playlistId',
-//     onDelete: 'CASCADE',
-//     as: 'playlists',
-// });
+Playlist.belongsToMany(Music, { onDelete: 'CASCADE', foreignKey: 'playlistid' });
+Music.belongsToMany(Playlist, { onDelete: 'CASCADE', foreignKey: 'musicid', });
