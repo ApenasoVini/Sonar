@@ -5,6 +5,7 @@ import userRoutes from './src/routes/user/userRoutes.js';
 import authRoutes from './src/routes/auth/authRoutes.js';
 import musicRoutes from './src/routes/music/musicRoutes.js';
 import albumRoutes from './src/routes/album/albumRoutes.js';
+import playlistRoutes from './src/routes/playlist/playlistRoutes.js';
 import './src/db/models/relationships.js';
 import { v2 as cloudinary } from 'cloudinary';
 
@@ -23,20 +24,21 @@ app.use(express.json());
 app.use("/user", userRoutes);
 app.use("/music", musicRoutes);
 app.use("/auth", authRoutes);
+app.use("/playlist", playlistRoutes);
 app.use("/album", albumRoutes);
 app.get('/', (req, res) => {
     return res.status(200).json({ "msg": "This is the Sonar API" });
 });
 
 // try {
-    // db.sync()
-    //     .then(() => {
-    //         console.log("All models were synchronized successfully.");
-    //     })
-    //     .catch((error) => {
-    //         console.error("Error synchronizing the models:", error);
-    //     });
-    app.listen(process.env.PORT || 8000, () => console.log(`Server running on port: ${process.env.PORT || 8000}\n`));
+// db.sync()
+//     .then(() => {
+//         console.log("All models were synchronized successfully.");
+//     })
+//     .catch((error) => {
+//         console.error("Error synchronizing the models:", error);
+//     });
+app.listen(process.env.PORT || 8000, () => console.log(`Server running on port: ${process.env.PORT || 8000}\n`));
 // } catch (err) {
 //     console.error(`\nError in running server: ${err}\n`);
 // }
