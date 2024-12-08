@@ -25,3 +25,9 @@ Music.belongsToMany(Playlist, {
 
 User.hasMany(Playlist, { onDelete: 'CASCADE', foreignKey: 'userid' });
 Playlist.belongsTo(User, { foreignKey: 'userid' });
+
+User.hasMany(UserHistory, {onDelete: 'CASCADE'});
+UserHistory.belongsTo(User);
+
+Song.hasMany(UserHistory, {onDelete: 'CASCADE'});
+UserHistory.belongsTo(Song);
